@@ -24,7 +24,7 @@ describe('Auth middleware', () => {
     expect(middlewareFunc).toThrow(error)
   })
 
-  it.skip('Should save userData from accessToken to a request object', () => {
+  it('Should save userData from accessToken to a request object', () => {
     const payload = { userId: 'testId' }
     const { accessToken } = tokenService.generateTokens(payload)
     const mockRequest = { cookies: { accessToken } }
