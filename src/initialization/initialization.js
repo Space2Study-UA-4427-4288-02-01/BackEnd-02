@@ -25,7 +25,7 @@ const initialization = (app) => {
 
   app.use('/', router)
 
-  setupSwaggerDocs(app, process.env.PORT || 3000)
+  setupSwaggerDocs(app)
 
   app.use((_req, _res, next) => {
     next(createNotFoundError())
