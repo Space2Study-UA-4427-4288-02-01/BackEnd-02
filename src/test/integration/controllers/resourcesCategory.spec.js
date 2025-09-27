@@ -29,7 +29,7 @@ const updateResourceCategoryData = {
   name: 'Computer Science'
 }
 
-describe.skip('ResourceCategory controller', () => {
+describe('ResourceCategory controller', () => {
   let app, server, accessToken, currentUser, studentAccessToken, testResourceCategory
 
   beforeAll(async () => {

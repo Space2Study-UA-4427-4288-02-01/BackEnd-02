@@ -8,7 +8,7 @@ const tokenService = require('~/services/token')
 const Token = require('~/models/token')
 const { expectError } = require('~/test/helpers')
 
-describe.skip('Auth controller', () => {
+describe('Auth controller', () => {
   let app, server, signupResponse
 
   beforeAll(async () => {
