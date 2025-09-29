@@ -8,6 +8,7 @@ const {
 const router = require('~/routes')
 const { createNotFoundError } = require('~/utils/errorsHelper')
 const errorMiddleware = require('~/middlewares/error')
+const { setupSwaggerDocs } = require('~/initialization/swagger')
 
 const initialization = (app) => {
   app.use(express.json({ limit: '10mb' }))
@@ -23,6 +24,8 @@ const initialization = (app) => {
   )
 
   app.use('/', router)
+
+  setupSwaggerDocs(app)
 
   app.use((_req, _res, next) => {
     next(createNotFoundError())
