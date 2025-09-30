@@ -1,5 +1,7 @@
+const { OAuth2Client } = require('google-auth-library')
 const tokenService = require('~/services/token')
 const emailService = require('~/services/email')
+const userService = require('~/services/user')
 const { getUserByEmail, createUser, privateUpdateUser, getUserById } = require('~/services/user')
 const { createError } = require('~/utils/errorsHelper')
 const {
@@ -13,6 +15,9 @@ const emailSubject = require('~/consts/emailSubject')
 const {
   tokenNames: { REFRESH_TOKEN, RESET_TOKEN, CONFIRM_TOKEN }
 } = require('~/consts/auth')
+const {
+  gmailCredentials: { clientId }
+} = require('~/configs/config')
 
 const authService = {
   signup: async (role, firstName, lastName, email, password, language) => {
@@ -27,7 +32,7 @@ const authService = {
     }
   },
 
-  login: async (email, password, isFromGoogle) => {
+  login: async (email, password, isFromGoogle, overrideFirstLogin) => {
     const user = await getUserByEmail(email)
 
     if (!user) {
@@ -40,22 +45,53 @@ const authService = {
       throw createError(401, INCORRECT_CREDENTIALS)
     }
 
-    const { _id, lastLoginAs, isFirstLogin, isEmailConfirmed } = user
+    const { _id, lastLoginAs, isFirstLogin, isEmailConfirmed, role } = user
 
-    if (!isEmailConfirmed) {
+    if (!isEmailConfirmed && !overrideFirstLogin) { // TODO remove overrideFirstLogin after email confirmation implementation
       throw createError(401, EMAIL_NOT_CONFIRMED)
     }
 
-    const tokens = tokenService.generateTokens({ id: _id, role: lastLoginAs, isFirstLogin })
+    const resolvedIsFirstLogin = overrideFirstLogin ? false : isFirstLogin
+    const resolvedRole = lastLoginAs ?? role[0] // TODO consider refactoring this logic
+
+    const tokens = tokenService.generateTokens({ id: _id, role: resolvedRole, isFirstLogin: resolvedIsFirstLogin })
     await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)
 
-    if (isFirstLogin) {
+    if (resolvedIsFirstLogin) {
       await privateUpdateUser(_id, { isFirstLogin: false })
     }
 
     await privateUpdateUser(_id, { lastLogin: new Date() })
 
     return tokens
+  },
+
+  googleAuth: async (credential) => {
+    const oAuth2Client = new OAuth2Client(clientId)
+
+    const ticket = await oAuth2Client.verifyIdToken({
+      idToken: credential,
+      audience: clientId,
+    })
+
+    const { email, given_name = '', family_name = '', sub } = ticket.getPayload() ?? {}
+
+    const user = await getUserByEmail(email)
+
+    if (!user) {
+      await userService.createUser(
+        'student', // TODO set role programmatically
+        given_name,
+        family_name,
+        email,
+        sub,
+      )
+    }
+
+    const isFromGoogle = true
+    const overrideFirstLogin = true // TODO remove after email confirmation implementation
+
+    return await module.exports.login(email, sub, isFromGoogle, overrideFirstLogin)
   },
 
   logout: async (refreshToken) => {

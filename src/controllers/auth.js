@@ -1,7 +1,7 @@
 const authService = require('~/services/auth')
 const { oneDayInMs } = require('~/consts/auth')
 const {
-  config: { COOKIE_DOMAIN }
+  config: { COOKIE_DOMAIN },
 } = require('~/configs/config')
 const {
   tokenNames: { REFRESH_TOKEN, ACCESS_TOKEN }
@@ -86,11 +86,22 @@ const updatePassword = async (req, res) => {
   res.status(204).end()
 }
 
+const googleAuth = async (req, res) => {
+  const { token } = req.body
+  const { accessToken, refreshToken } = await authService.googleAuth(token.credential)
+
+  res.cookie(ACCESS_TOKEN, accessToken, COOKIE_OPTIONS)
+  res.cookie(REFRESH_TOKEN, refreshToken, COOKIE_OPTIONS)
+
+  res.status(200).json({ accessToken })
+}
+
 module.exports = {
   signup,
   login,
   logout,
   refreshAccessToken,
   sendResetPasswordEmail,
-  updatePassword
+  updatePassword,
+  googleAuth,
 }

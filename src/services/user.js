@@ -56,7 +56,7 @@ const userService = {
       lastName,
       email,
       lastLoginAs: role,
-      password,
+      password, // TODO hash password
       appLanguage,
       isEmailConfirmed
     })
