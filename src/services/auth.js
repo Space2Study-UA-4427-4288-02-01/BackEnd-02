@@ -80,7 +80,7 @@ const authService = {
 
     if (!user) {
       await userService.createUser(
-        'student', // TODO set role programmatically
+        'tutor', // TODO set role programmatically
         given_name,
         family_name,
         email,
