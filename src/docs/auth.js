@@ -206,6 +206,30 @@
  *           type: string
  *           example: "Password updated successfully"
  *
+ *     GoogleAuthRequest:
+ *       type: object
+ *       required:
+ *         - credential
+ *       properties:
+ *         credential:
+ *           type: string
+ *           description: Google ID token received from Google Sign-In
+ *           example: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjdkYzAyYjgxNzk..."
+ *
+ *     GoogleAuthResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         message:
+ *           type: string
+ *           example: "Google authentication successful"
+ *         accessToken:
+ *           type: string
+ *           description: JWT access token
+ *           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *
  *   responses:
  *     ValidationError:
  *       description: Validation error - Invalid input data
@@ -588,4 +612,96 @@
  *                 status:
  *                   type: number
  *                   example: 404
+ */
+
+/**
+ * @openapi
+ * /auth/google-auth:
+ *   post:
+ *     tags:
+ *       - Authentication
+ *     summary: Google OAuth authentication
+ *     description: Authenticate user with Google ID token and return JWT tokens
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/GoogleAuthRequest'
+ *     responses:
+ *       200:
+ *         description: Google authentication successful
+ *         headers:
+ *           Set-Cookie:
+ *             schema:
+ *               type: string
+ *               example: refreshToken=abc123; HttpOnly; Secure; SameSite=Strict
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/GoogleAuthResponse'
+ *       400:
+ *         description: Invalid Google credential or validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid Google credential"
+ *                 status:
+ *                   type: number
+ *                   example: 400
+ *       401:
+ *         description: Google token verification failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Google authentication failed"
+ *                 status:
+ *                   type: number
+ *                   example: 401
+ *       409:
+ *         description: Email already exists with different auth provider
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Account already exists with this email"
+ *                 status:
+ *                   type: number
+ *                   example: 409
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ *                 status:
+ *                   type: number
+ *                   example: 500
  */
