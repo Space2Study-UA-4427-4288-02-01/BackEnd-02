@@ -1,4 +1,5 @@
 const { OAuth2Client } = require('google-auth-library')
+const bcrypt = require('bcrypt')
 const tokenService = require('~/services/token')
 const emailService = require('~/services/email')
 const userService = require('~/services/user')
@@ -21,11 +22,15 @@ const {
 
 const authService = {
   signup: async (role, firstName, lastName, email, password, language) => {
-    const user = await createUser(role, firstName, lastName, email, password, language)
+    const isEmailConfirmed = true // TODO remove after email confirmation implementation
+    const user = await createUser(role, firstName, lastName, email, password, language, isEmailConfirmed)
 
     const confirmToken = tokenService.generateConfirmToken({ id: user._id, role })
     await tokenService.saveToken(user._id, confirmToken, CONFIRM_TOKEN)
-    await emailService.sendEmail(email, emailSubject.EMAIL_CONFIRMATION, language, { confirmToken, email, firstName })
+
+    // TODO uncomment after email confirmation implementation
+    // await emailService.sendEmail(email, emailSubject.EMAIL_CONFIRMATION, language, { confirmToken, email, firstName })
+
     return {
       userId: user._id,
       userEmail: user.email
@@ -39,10 +44,12 @@ const authService = {
       throw createError(401, USER_NOT_FOUND)
     }
 
-    const checkedPassword = (password === user.password) || isFromGoogle
+    if (!isFromGoogle) {
+      const checkedPassword = await bcrypt.compare(password, user.password)
 
-    if (!checkedPassword) {
-      throw createError(401, INCORRECT_CREDENTIALS)
+      if (!checkedPassword) {
+        throw createError(401, INCORRECT_CREDENTIALS)
+      }
     }
 
     const { _id, lastLoginAs, isFirstLogin, isEmailConfirmed, role } = user

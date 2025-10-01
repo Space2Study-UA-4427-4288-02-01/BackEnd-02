@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt')
 const User = require('~/models/user')
 const { createError } = require('~/utils/errorsHelper')
 
@@ -50,13 +51,15 @@ const userService = {
       throw createError(409, ALREADY_REGISTERED)
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10)
+
     return await User.create({
       role,
       firstName,
       lastName,
       email,
       lastLoginAs: role,
-      password, // TODO hash password
+      password: hashedPassword,
       appLanguage,
       isEmailConfirmed
     })
