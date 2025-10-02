@@ -9,7 +9,7 @@ const signupValidationSchema = require('~/validation/schemas/signup')
 const { loginValidationSchema } = require('~/validation/schemas/login')
 const resetPasswordValidationSchema = require('~/validation/schemas/resetPassword')
 const forgotPasswordValidationSchema = require('~/validation/schemas/forgotPassword')
-const { googleAuthValidationSchema } = require('../validation/schemas/googleAuth')
+const { googleAuthValidationSchema, googleSignupValidationSchema } = require('../validation/schemas/googleAuth')
 
 router.post(
   '/signup',
@@ -38,6 +38,13 @@ router.post(
   validationMiddleware(googleAuthValidationSchema),
   langMiddleware,
   asyncWrapper(authController.googleAuth)
+)
+
+router.post(
+  '/google-signup',
+  validationMiddleware(googleSignupValidationSchema),
+  langMiddleware,
+  asyncWrapper(authController.googleSignup)
 )
 
 module.exports = router

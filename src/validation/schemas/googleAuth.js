@@ -5,4 +5,15 @@ const googleAuthValidationSchema = {
   },
 }
 
-module.exports = { googleAuthValidationSchema }
+const googleSignupValidationSchema = {
+  token: {
+    type: 'object',
+    required: true
+  },
+  role: {
+    type: 'string',
+    required: true
+  }
+}
+
+module.exports = { googleAuthValidationSchema, googleSignupValidationSchema }
