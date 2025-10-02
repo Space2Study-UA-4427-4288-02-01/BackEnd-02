@@ -96,6 +96,14 @@ const googleAuth = async (req, res) => {
   res.status(200).json({ accessToken })
 }
 
+const googleSignup = async (req, res) => {
+  const { token, role } = req.body
+  const lang = req.lang
+  const userData = await authService.googleSignup({ token: token.credential, role, lang })
+
+  res.status(201).json(userData)
+}
+
 module.exports = {
   signup,
   login,
@@ -104,4 +112,5 @@ module.exports = {
   sendResetPasswordEmail,
   updatePassword,
   googleAuth,
+  googleSignup
 }

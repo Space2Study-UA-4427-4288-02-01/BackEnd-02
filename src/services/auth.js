@@ -1,9 +1,8 @@
-const { OAuth2Client } = require('google-auth-library')
 const bcrypt = require('bcrypt')
 const tokenService = require('~/services/token')
 const emailService = require('~/services/email')
-const userService = require('~/services/user')
 const { getUserByEmail, createUser, privateUpdateUser, getUserById } = require('~/services/user')
+const { googleAuthService } = require('./googleAuthService')
 const { createError } = require('~/utils/errorsHelper')
 const {
   EMAIL_NOT_CONFIRMED,
@@ -16,9 +15,6 @@ const emailSubject = require('~/consts/emailSubject')
 const {
   tokenNames: { REFRESH_TOKEN, RESET_TOKEN, CONFIRM_TOKEN }
 } = require('~/consts/auth')
-const {
-  gmailCredentials: { clientId }
-} = require('~/configs/config')
 
 const authService = {
   signup: async (role, firstName, lastName, email, password, language) => {
@@ -74,31 +70,17 @@ const authService = {
   },
 
   googleAuth: async (credential) => {
-    const oAuth2Client = new OAuth2Client(clientId)
-
-    const ticket = await oAuth2Client.verifyIdToken({
-      idToken: credential,
-      audience: clientId,
-    })
-
-    const { email, given_name = '', family_name = '', sub } = ticket.getPayload() ?? {}
-
-    const user = await getUserByEmail(email)
-
-    if (!user) {
-      await userService.createUser(
-        'tutor', // TODO set role programmatically
-        given_name,
-        family_name,
-        email,
-        sub,
-      )
-    }
-
+    const { email, sub } = await googleAuthService.getPayload(credential)
     const isFromGoogle = true
     const overrideFirstLogin = true // TODO remove after email confirmation implementation
 
     return await module.exports.login(email, sub, isFromGoogle, overrideFirstLogin)
+  },
+
+  googleSignup: async ({ token, role, lang }) => {
+    const { email, given_name = '', family_name = '', sub } = await googleAuthService.getPayload(token)
+
+    return await module.exports.signup(role, given_name, family_name, email, sub, lang)
   },
 
   logout: async (refreshToken) => {

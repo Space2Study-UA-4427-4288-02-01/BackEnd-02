@@ -230,6 +230,73 @@
  *           description: JWT access token
  *           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
  *
+ *     GoogleSignupRequest:
+ *       type: object
+ *       required:
+ *         - credential
+ *         - role
+ *       properties:
+ *         credential:
+ *           type: string
+ *           description: Google ID token received from Google Sign-In
+ *           example: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjdkYzAyYjgxNzk..."
+ *         role:
+ *           type: array
+ *           items:
+ *             type: string
+ *             enum: [student, tutor]
+ *           description: User roles to assign during signup
+ *           example: ["student"]
+ *
+ *     GoogleSignupResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         message:
+ *           type: string
+ *           example: "Google signup successful"
+ *         user:
+ *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *               example: "507f1f77bcf86cd799439011"
+ *             firstName:
+ *               type: string
+ *               example: "John"
+ *             lastName:
+ *               type: string
+ *               example: "Doe"
+ *             email:
+ *               type: string
+ *               example: "john.doe@gmail.com"
+ *             role:
+ *               type: array
+ *               items:
+ *                 type: string
+ *               example: ["student"]
+ *             isEmailConfirmed:
+ *               type: boolean
+ *               example: true
+ *             googleId:
+ *               type: string
+ *               example: "110169484474386276334"
+ *             authProvider:
+ *               type: string
+ *               example: "google"
+ *             photo:
+ *               type: string
+ *               example: "https://lh3.googleusercontent.com/a/photo.jpg"
+ *             isFirstLogin:
+ *               type: boolean
+ *               example: true
+ *             createdAt:
+ *               type: string
+ *               format: date-time
+ *               example: "2024-01-15T10:30:00Z"
+ *
  *   responses:
  *     ValidationError:
  *       description: Validation error - Invalid input data
@@ -685,6 +752,109 @@
  *                 message:
  *                   type: string
  *                   example: "Account already exists with this email"
+ *                 status:
+ *                   type: number
+ *                   example: 409
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ *                 status:
+ *                   type: number
+ *                   example: 500
+ */
+
+/**
+ * @openapi
+ * /auth/google-signup:
+ *   post:
+ *     tags:
+ *       - Authentication
+ *     summary: Google OAuth signup
+ *     description: Create a new user account using Google ID token with role selection
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/GoogleSignupRequest'
+ *     responses:
+ *       201:
+ *         description: Google signup successful
+ *         headers:
+ *           Set-Cookie:
+ *             schema:
+ *               type: string
+ *               example: refreshToken=abc123; HttpOnly; Secure; SameSite=Strict
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/GoogleSignupResponse'
+ *       400:
+ *         description: Invalid Google credential or validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid Google credential or missing required fields"
+ *                 status:
+ *                   type: number
+ *                   example: 400
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: "role"
+ *                       message:
+ *                         type: string
+ *                         example: "Role is required for signup"
+ *       401:
+ *         description: Google token verification failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Google token verification failed"
+ *                 status:
+ *                   type: number
+ *                   example: 401
+ *       409:
+ *         description: Email already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "User with this email already exists"
  *                 status:
  *                   type: number
  *                   example: 409
