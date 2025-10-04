@@ -11,7 +11,9 @@ const config = {
   JWT_RESET_SECRET: process.env.JWT_RESET_SECRET,
   JWT_RESET_EXPIRES_IN: process.env.JWT_RESET_EXPIRES_IN,
   JWT_CONFIRM_SECRET: process.env.JWT_CONFIRM_SECRET,
-  JWT_CONFIRM_EXPIRES_IN: process.env.JWT_CONFIRM_EXPIRES_IN
+  JWT_CONFIRM_EXPIRES_IN: process.env.JWT_CONFIRM_EXPIRES_IN,
+  GOOGLE_APP_USER: process.env.GOOGLE_APP_USER,
+  GOOGLE_APP_PASSWORD: process.env.GOOGLE_APP_PASSWORD,
 }
 
 const gmailCredentials = {
@@ -19,7 +21,9 @@ const gmailCredentials = {
   clientId: process.env.GMAIL_CLIENT_ID,
   clientSecret: process.env.GMAIL_CLIENT_SECRET,
   refreshToken: process.env.GMAIL_REFRESH_TOKEN,
-  redirectUri: process.env.GMAIL_REDIRECT_URI
+  redirectUri: process.env.GMAIL_REDIRECT_URI,
+  appUser: process.env.GOOGLE_APP_USER,
+  appPassword: process.env.GOOGLE_APP_PASSWORD
 }
 
 const superAdmin = {
