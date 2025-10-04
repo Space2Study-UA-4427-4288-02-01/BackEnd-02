@@ -9,6 +9,7 @@ const {
   INCORRECT_CREDENTIALS,
   BAD_RESET_TOKEN,
   BAD_REFRESH_TOKEN,
+  BAD_CONFIRM_TOKEN,
   USER_NOT_FOUND
 } = require('~/consts/errors')
 const emailSubject = require('~/consts/emailSubject')
@@ -18,22 +19,20 @@ const {
 
 const authService = {
   signup: async (role, firstName, lastName, email, password, language) => {
-    const isEmailConfirmed = true // TODO remove after email confirmation implementation
-    const user = await createUser(role, firstName, lastName, email, password, language, isEmailConfirmed)
+    const user = await createUser(role, firstName, lastName, email, password, language)
 
     const confirmToken = tokenService.generateConfirmToken({ id: user._id, role })
     await tokenService.saveToken(user._id, confirmToken, CONFIRM_TOKEN)
 
-    // TODO uncomment after email confirmation implementation
-    // await emailService.sendEmail(email, emailSubject.EMAIL_CONFIRMATION, language, { confirmToken, email, firstName })
+    await emailService.sendEmail(email, emailSubject.EMAIL_CONFIRMATION, language, { confirmToken, email, firstName })
 
     return {
       userId: user._id,
-      userEmail: user.email
+      userEmail: user.emails
     }
   },
 
-  login: async (email, password, isFromGoogle, overrideFirstLogin) => {
+  login: async (email, password, isFromGoogle) => {
     const user = await getUserByEmail(email)
 
     if (!user) {
@@ -50,17 +49,16 @@ const authService = {
 
     const { _id, lastLoginAs, isFirstLogin, isEmailConfirmed, role } = user
 
-    if (!isEmailConfirmed && !overrideFirstLogin) { // TODO remove overrideFirstLogin after email confirmation implementation
+    if (!isEmailConfirmed) {
       throw createError(401, EMAIL_NOT_CONFIRMED)
     }
 
-    const resolvedIsFirstLogin = overrideFirstLogin ? false : isFirstLogin
     const resolvedRole = lastLoginAs ?? role[0] // TODO consider refactoring this logic
 
-    const tokens = tokenService.generateTokens({ id: _id, role: resolvedRole, isFirstLogin: resolvedIsFirstLogin })
+    const tokens = tokenService.generateTokens({ id: _id, role: resolvedRole, isFirstLogin })
     await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)
 
-    if (resolvedIsFirstLogin) {
+    if (isFirstLogin) {
       await privateUpdateUser(_id, { isFirstLogin: false })
     }
 
@@ -72,9 +70,8 @@ const authService = {
   googleAuth: async (credential) => {
     const { email, sub } = await googleAuthService.getPayload(credential)
     const isFromGoogle = true
-    const overrideFirstLogin = true // TODO remove after email confirmation implementation
 
-    return await module.exports.login(email, sub, isFromGoogle, overrideFirstLogin)
+    return await module.exports.login(email, sub, isFromGoogle)
   },
 
   googleSignup: async ({ token, role, lang }) => {
@@ -85,6 +82,20 @@ const authService = {
 
   logout: async (refreshToken) => {
     await tokenService.removeRefreshToken(refreshToken)
+  },
+
+  confirmEmail: async (token) => {
+    const tokenData = tokenService.validateConfirmToken(token)
+    const tokenFromDB = await tokenService.findToken(token, CONFIRM_TOKEN)
+
+    if (!tokenData || !tokenFromDB) {
+      throw createError(400, BAD_CONFIRM_TOKEN)
+    }
+
+    const { id: userId } = tokenData
+    await privateUpdateUser(userId, { isEmailConfirmed: true })
+
+    await tokenService.removeConfirmToken(userId)
   },
 
   refreshAccessToken: async (refreshToken) => {

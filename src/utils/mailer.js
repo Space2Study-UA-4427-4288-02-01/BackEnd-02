@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer')
 const { google } = require('googleapis')
 const logger = require('~/logger/logger')
 const {
-  gmailCredentials: { user, clientId, clientSecret, refreshToken, redirectUri }
+  gmailCredentials: { clientId, clientSecret, refreshToken, redirectUri }
 } = require('~/configs/config')
 const { createError } = require('~/utils/errorsHelper')
 const { API_TOKEN_NOT_RETRIEVED, EMAIL_NOT_SENT } = require('~/consts/errors')
@@ -25,17 +25,12 @@ const getAccessToken = async () => {
 
 const createTransport = async () => {
   try {
-    const accessToken = await getAccessToken()
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       secure: true,
       auth: {
-        type: 'OAuth2',
-        user,
-        clientId,
-        clientSecret,
-        refreshToken,
-        accessToken
+        user: process.env.GOOGLE_APP_USER,
+        pass: process.env.GOOGLE_APP_PASSWORD,
       }
     })
 
