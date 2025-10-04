@@ -45,7 +45,7 @@ const logout = async (req, res) => {
   res.clearCookie(REFRESH_TOKEN)
   res.clearCookie(ACCESS_TOKEN)
 
-  res.status(204).end() 
+  res.status(204).end()
 }
 
 const confirmEmail = async (req, res) => {

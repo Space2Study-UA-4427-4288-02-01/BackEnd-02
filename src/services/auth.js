@@ -47,7 +47,7 @@ const authService = {
       }
     }
 
-    const { _id, lastLoginAs, isFirstLogin, isEmailConfirmed, role } = user
+    const { _id, lastLoginAs, isFirstLogin, firstName, lastName, isEmailConfirmed, role } = user
 
     if (!isEmailConfirmed) {
       throw createError(401, EMAIL_NOT_CONFIRMED)
@@ -55,7 +55,7 @@ const authService = {
 
     const resolvedRole = lastLoginAs ?? role[0] // TODO consider refactoring this logic
 
-    const tokens = tokenService.generateTokens({ id: _id, role: resolvedRole, isFirstLogin })
+    const tokens = tokenService.generateTokens({ id: _id, role: resolvedRole, isFirstLogin, firstName, lastName })
     await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)
 
     if (isFirstLogin) {

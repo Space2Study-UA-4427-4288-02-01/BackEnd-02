@@ -206,6 +206,26 @@
  *           type: string
  *           example: "Password updated successfully"
  *
+ *     ConfirmEmailRequest:
+ *       type: object
+ *       required:
+ *         - token
+ *       properties:
+ *         token:
+ *           type: string
+ *           description: Email confirmation token from email link
+ *           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *
+ *     ConfirmEmailResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         message:
+ *           type: string
+ *           example: "Email confirmed successfully"
+ *
  *     GoogleAuthRequest:
  *       type: object
  *       required:
@@ -679,6 +699,114 @@
  *                 status:
  *                   type: number
  *                   example: 404
+ */
+
+/**
+ * @openapi
+ * /auth/confirm-email:
+ *   post:
+ *     tags:
+ *       - Authentication
+ *     summary: Confirm email address
+ *     description: Confirm user email address using token from confirmation email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ConfirmEmailRequest'
+ *     responses:
+ *       200:
+ *         description: Email confirmed successfully
+ *         headers:
+ *           Set-Cookie:
+ *             schema:
+ *               type: string
+ *               example: refreshToken=abc123; HttpOnly; Secure; SameSite=Strict
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ConfirmEmailResponse'
+ *       400:
+ *         description: Invalid or missing token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid or missing confirmation token"
+ *                 status:
+ *                   type: number
+ *                   example: 400
+ *       401:
+ *         description: Invalid or expired token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid or expired confirmation token"
+ *                 status:
+ *                   type: number
+ *                   example: 401
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "User not found"
+ *                 status:
+ *                   type: number
+ *                   example: 404
+ *       409:
+ *         description: Email already confirmed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Email is already confirmed"
+ *                 status:
+ *                   type: number
+ *                   example: 409
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ *                 status:
+ *                   type: number
+ *                   example: 500
  */
 
 /**
