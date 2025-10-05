@@ -111,44 +111,26 @@
  *         message:
  *           type: string
  *           example: "Authentication successful"
- *         user:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *               example: "507f1f77bcf86cd799439011"
- *             firstName:
- *               type: string
- *               example: "John"
- *             lastName:
- *               type: string
- *               example: "Doe"
- *             email:
- *               type: string
- *               example: "john.doe@example.com"
- *             role:
- *               type: array
- *               items:
- *                 type: string
- *               example: ["student"]
- *             isEmailConfirmed:
- *               type: boolean
- *               example: false
- *             isFirstLogin:
- *               type: boolean
- *               example: true
- *             lastLogin:
- *               type: string
- *               format: date-time
- *               example: "2024-01-15T14:30:00Z"
- *             createdAt:
- *               type: string
- *               format: date-time
- *               example: "2024-01-15T10:30:00Z"
  *         accessToken:
  *           type: string
  *           description: JWT access token
  *           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *
+ *     SignupResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         message:
+ *           type: string
+ *           example: "User registered successfully"
+ *         userId:
+ *           type: string
+ *           example: "507f1f77bcf86cd799439011"
+ *         userEmail:
+ *           type: string
+ *           example: "john.doe@gmail.com"
  *
  *     RefreshTokenResponse:
  *       type: object
@@ -206,6 +188,26 @@
  *           type: string
  *           example: "Password updated successfully"
  *
+ *     ConfirmEmailRequest:
+ *       type: object
+ *       required:
+ *         - token
+ *       properties:
+ *         token:
+ *           type: string
+ *           description: Email confirmation token from email link
+ *           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *
+ *     ConfirmEmailResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         message:
+ *           type: string
+ *           example: "Email confirmed successfully"
+ *
  *     GoogleAuthRequest:
  *       type: object
  *       required:
@@ -257,45 +259,12 @@
  *         message:
  *           type: string
  *           example: "Google signup successful"
- *         user:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *               example: "507f1f77bcf86cd799439011"
- *             firstName:
- *               type: string
- *               example: "John"
- *             lastName:
- *               type: string
- *               example: "Doe"
- *             email:
- *               type: string
- *               example: "john.doe@gmail.com"
- *             role:
- *               type: array
- *               items:
- *                 type: string
- *               example: ["student"]
- *             isEmailConfirmed:
- *               type: boolean
- *               example: true
- *             googleId:
- *               type: string
- *               example: "110169484474386276334"
- *             authProvider:
- *               type: string
- *               example: "google"
- *             photo:
- *               type: string
- *               example: "https://lh3.googleusercontent.com/a/photo.jpg"
- *             isFirstLogin:
- *               type: boolean
- *               example: true
- *             createdAt:
- *               type: string
- *               format: date-time
- *               example: "2024-01-15T10:30:00Z"
+ *         userId:
+ *           type: string
+ *           example: "507f1f77bcf86cd799439011"
+ *         userEmail:
+ *           type: string
+ *           example: "john.doe@gmail.com"
  *
  *   responses:
  *     ValidationError:
@@ -433,7 +402,7 @@
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/AuthResponse'
+ *               $ref: '#/components/schemas/SignupResponse'
  *       400:
  *         $ref: '#/components/responses/ValidationError'
  *       409:
@@ -679,6 +648,114 @@
  *                 status:
  *                   type: number
  *                   example: 404
+ */
+
+/**
+ * @openapi
+ * /auth/confirm-email:
+ *   post:
+ *     tags:
+ *       - Authentication
+ *     summary: Confirm email address
+ *     description: Confirm user email address using token from confirmation email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ConfirmEmailRequest'
+ *     responses:
+ *       200:
+ *         description: Email confirmed successfully
+ *         headers:
+ *           Set-Cookie:
+ *             schema:
+ *               type: string
+ *               example: refreshToken=abc123; HttpOnly; Secure; SameSite=Strict
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ConfirmEmailResponse'
+ *       400:
+ *         description: Invalid or missing token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid or missing confirmation token"
+ *                 status:
+ *                   type: number
+ *                   example: 400
+ *       401:
+ *         description: Invalid or expired token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid or expired confirmation token"
+ *                 status:
+ *                   type: number
+ *                   example: 401
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "User not found"
+ *                 status:
+ *                   type: number
+ *                   example: 404
+ *       409:
+ *         description: Email already confirmed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Email is already confirmed"
+ *                 status:
+ *                   type: number
+ *                   example: 409
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ *                 status:
+ *                   type: number
+ *                   example: 500
  */
 
 /**

@@ -48,6 +48,14 @@ const logout = async (req, res) => {
   res.status(204).end()
 }
 
+const confirmEmail = async (req, res) => {
+  const { confirmToken } = req.body
+
+  await authService.confirmEmail(confirmToken)
+
+  res.status(200).json({ success: true, message: 'Email confirmed successfully' })
+}
+
 const refreshAccessToken = async (req, res) => {
   const { refreshToken } = req.cookies
 
@@ -108,6 +116,7 @@ module.exports = {
   signup,
   login,
   logout,
+  confirmEmail,
   refreshAccessToken,
   sendResetPasswordEmail,
   updatePassword,

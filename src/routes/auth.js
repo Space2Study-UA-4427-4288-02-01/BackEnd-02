@@ -31,6 +31,11 @@ router.patch(
   validationMiddleware(resetPasswordValidationSchema),
   langMiddleware,
   asyncWrapper(authController.updatePassword)
+) 
+
+router.post(
+  '/confirm-email',
+  asyncWrapper(authController.confirmEmail)
 )
 
 router.post(
