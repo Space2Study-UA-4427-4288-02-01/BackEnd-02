@@ -53,7 +53,7 @@ const confirmEmail = async (req, res) => {
 
   await authService.confirmEmail(confirmToken)
 
-  res.status(200).json({ message: 'Email confirmed' })
+  res.status(200).json({ success: true, message: 'Email confirmed successfully' })
 }
 
 const refreshAccessToken = async (req, res) => {

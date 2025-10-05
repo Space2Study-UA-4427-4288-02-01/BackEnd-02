@@ -111,44 +111,26 @@
  *         message:
  *           type: string
  *           example: "Authentication successful"
- *         user:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *               example: "507f1f77bcf86cd799439011"
- *             firstName:
- *               type: string
- *               example: "John"
- *             lastName:
- *               type: string
- *               example: "Doe"
- *             email:
- *               type: string
- *               example: "john.doe@example.com"
- *             role:
- *               type: array
- *               items:
- *                 type: string
- *               example: ["student"]
- *             isEmailConfirmed:
- *               type: boolean
- *               example: false
- *             isFirstLogin:
- *               type: boolean
- *               example: true
- *             lastLogin:
- *               type: string
- *               format: date-time
- *               example: "2024-01-15T14:30:00Z"
- *             createdAt:
- *               type: string
- *               format: date-time
- *               example: "2024-01-15T10:30:00Z"
  *         accessToken:
  *           type: string
  *           description: JWT access token
  *           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *
+ *     SignupResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         message:
+ *           type: string
+ *           example: "User registered successfully"
+ *         userId:
+ *           type: string
+ *           example: "507f1f77bcf86cd799439011"
+ *         userEmail:
+ *           type: string
+ *           example: "john.doe@gmail.com"
  *
  *     RefreshTokenResponse:
  *       type: object
@@ -277,45 +259,12 @@
  *         message:
  *           type: string
  *           example: "Google signup successful"
- *         user:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *               example: "507f1f77bcf86cd799439011"
- *             firstName:
- *               type: string
- *               example: "John"
- *             lastName:
- *               type: string
- *               example: "Doe"
- *             email:
- *               type: string
- *               example: "john.doe@gmail.com"
- *             role:
- *               type: array
- *               items:
- *                 type: string
- *               example: ["student"]
- *             isEmailConfirmed:
- *               type: boolean
- *               example: true
- *             googleId:
- *               type: string
- *               example: "110169484474386276334"
- *             authProvider:
- *               type: string
- *               example: "google"
- *             photo:
- *               type: string
- *               example: "https://lh3.googleusercontent.com/a/photo.jpg"
- *             isFirstLogin:
- *               type: boolean
- *               example: true
- *             createdAt:
- *               type: string
- *               format: date-time
- *               example: "2024-01-15T10:30:00Z"
+ *         userId:
+ *           type: string
+ *           example: "507f1f77bcf86cd799439011"
+ *         userEmail:
+ *           type: string
+ *           example: "john.doe@gmail.com"
  *
  *   responses:
  *     ValidationError:
@@ -453,7 +402,7 @@
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/AuthResponse'
+ *               $ref: '#/components/schemas/SignupResponse'
  *       400:
  *         $ref: '#/components/responses/ValidationError'
  *       409:
