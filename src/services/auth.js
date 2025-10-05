@@ -28,7 +28,7 @@ const authService = {
 
     return {
       userId: user._id,
-      userEmail: user.emails
+      userEmail: user.email
     }
   },
 
