@@ -34,7 +34,7 @@ router.patch(
 ) 
 
 router.post(
-  '/confirm-email',
+  '/confirm-email',// TODO add validation schema
   asyncWrapper(authController.confirmEmail)
 )
 
