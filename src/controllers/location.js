@@ -5,7 +5,8 @@ const getCountries = async (req, res) => {
 
   res.status(200).json({
     success: true,
-    data: countries
+    data: countries,
+    total: countries.length
   })
 }
 
@@ -15,7 +16,8 @@ const getCities = async (req, res) => {
 
   res.status(200).json({
     success: true,
-    data: cities
+    data: cities,
+    total: cities.length
   })
 }
 
