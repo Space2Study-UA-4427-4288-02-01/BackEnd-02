@@ -15,7 +15,7 @@
  *           example: "United States"
  *         countryCode:
  *           type: string
- *           description: ISO3 country code
+ *           description: iso2 country code
  *           example: "USA"
  *         native:
  *           type: string
@@ -186,10 +186,10 @@
  *         required: true
  *         schema:
  *           type: string
- *           pattern: '^[A-Z]{2,3}$'
+ *           pattern: '^[A-Z]{2}$'
  *           minLength: 2
- *           maxLength: 3
- *         description: ISO3 country code (3 uppercase letters)
+ *           maxLength: 2
+ *         description: iso2 country code (2 uppercase letters)
  *         example: "USA"
  *         examples:
  *           united_states:
