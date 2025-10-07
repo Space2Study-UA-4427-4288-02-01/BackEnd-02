@@ -6,6 +6,10 @@ class RedisService {
     this._client = redisClient
   }
 
+  get client() {
+    return this._client
+  }
+
   async connect() {
     try {
       this._client.on('error', err => logger.error('Redis Client Error', err))
@@ -17,8 +21,19 @@ class RedisService {
     }
   }
 
-  get client() {
-    return this._client
+  async disconnectRedis() {
+    try {
+      await this._client.quit()
+      logger.info('Disconnected from Redis')
+    } catch (err) {
+      logger.error('Could not disconnect from Redis', err)
+      try {
+        await this._client.disconnect()
+        logger.info('Disconnected from Redis')
+      } catch (err) {
+        logger.error('Could not disconnect from Redis', err)
+      }
+    }
   }
 }
 

@@ -8,6 +8,19 @@ const {
 } = require('~/configs/config')
 const scheduledCronJobs = require('~/cron-jobs/scheduledCronJobs')
 
+process.on('uncaughtException', async (error) => {
+  logger.error('Uncaught Exception:', error)
+  await redisService.disconnectRedis()
+  process.exit(1)
+})
+
+process.on('unhandledRejection', async (reason, promise) => {
+  logger.error('Unhandled Rejection at:', 'reason:', reason)
+  await redisService.disconnectRedis()
+  promise.catch(err => logger.error('Unhandled Rejection Error:', err))
+  process.exit(1)
+})
+
 const serverSetup = async (app) => {
   await databaseInitialization()
   await checkUserExistence()
