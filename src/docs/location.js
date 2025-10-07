@@ -155,7 +155,6 @@
  *                 summary: Successful response
  *                 value:
  *                   success: true
- *                   message: "Countries retrieved successfully"
  *                   data:
  *                     - id: "101"
  *                       name: "United States"
@@ -174,7 +173,7 @@
 
 /**
  * @openapi
- * /location/cities/{countryCode}:
+ * /location/countries/{countryCode}/cities:
  *   get:
  *     tags:
  *       - Location
@@ -227,9 +226,6 @@
  *                     - id: "1003"
  *                       name: "Chicago"
  *                   total: 19495
- *                   country:
- *                     code: "US"
- *                     name: "United States"
  *               ca_cities:
  *                 summary: Canada cities response
  *                 value:
@@ -240,9 +236,6 @@
  *                     - id: "2002"
  *                       name: "Vancouver"
  *                   total: 5162
- *                   country:
- *                     code: "CA"
- *                     name: "Canada"
  *       400:
  *         $ref: '#/components/responses/LocationValidationError'
  *       404:
