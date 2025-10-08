@@ -15,8 +15,9 @@ class LocationService {
   async fetchCountries() {
     try {
       const cachedValue = await this.redisClient.get('countries')
+
       if (cachedValue) {
-        return this.mapCountries(JSON.parse(cachedValue))
+        return JSON.parse(cachedValue)
       }
 
       const result = await this.cacheCountries()
@@ -37,7 +38,7 @@ class LocationService {
     try {
       const cachedValue = await this.redisClient.get(countryCode)
       if (cachedValue) {
-        return this.sliceCities(JSON.parse(cachedValue))
+        return JSON.parse(cachedValue)
       }
 
       const result = await this.cacheCities(countryCode)
