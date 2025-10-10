@@ -53,6 +53,11 @@ const userSchema = new Schema(
     },
     photo: String,
     professionalSummary: String,
+    professionalStatus: {
+      type: String,
+      minLength: [1, FIELD_CANNOT_BE_SHORTER('professional status', 1)],
+      maxLength: [100, FIELD_CANNOT_BE_LONGER('professional status', 100)]
+    },
     mainSubjects: {
       student: {
         type: [Schema.Types.ObjectId],
