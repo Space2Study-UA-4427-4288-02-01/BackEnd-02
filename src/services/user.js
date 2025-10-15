@@ -5,6 +5,11 @@ const { createError } = require('~/utils/errorsHelper')
 const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedUserFieldsForUpdate } = require('~/validation/services/user')
+const containers = require('~/consts/upload')
+const fileService = require('./file')
+const {
+  enums: { SPOKEN_LANG_ENUM }
+} = require('~/consts/validation')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -83,6 +88,8 @@ const userService = {
     }
 
     filteredUpdateData.mainSubjects = { ...user.mainSubjects, [role]: updateData.mainSubjects }
+    filteredUpdateData.nativeLanguage = updateData.nativeLanguage || user.nativeLanguage || SPOKEN_LANG_ENUM[0]
+    filteredUpdateData.isFirstLogin = false
 
     await User.findByIdAndUpdate(id, filteredUpdateData, { new: true, runValidators: true }).lean().exec()
   },
@@ -95,6 +102,15 @@ const userService = {
     }
 
     const user = await User.findByIdAndUpdate(id, { $set: statusesForChange }, { new: true }).lean().exec()
+
+    if (!user) {
+      throw createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
+    }
+  },
+
+  uploadPhoto: async (id, file) => {
+    const { publicUrl } = await fileService.uploadFile({ file, id, folder: containers.USER })
+    const user = await User.findByIdAndUpdate(id, { photo: publicUrl }, { new: true }).lean().exec()
 
     if (!user) {
       throw createError(404, DOCUMENT_NOT_FOUND([User.modelName]))

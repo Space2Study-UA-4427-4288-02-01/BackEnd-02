@@ -1,11 +1,10 @@
 const router = require('express').Router()
-
+const userController = require('~/controllers/user')
 const idValidation = require('~/middlewares/idValidation')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const { restrictTo, authMiddleware } = require('~/middlewares/auth')
 const isEntityValid = require('~/middlewares/entityValidation')
-
-const userController = require('~/controllers/user')
+const upload = require('~/middlewares/multer')
 const User = require('~/models/user')
 const {
   roles: { ADMIN }
@@ -20,6 +19,7 @@ router.param('id', idValidation)
 router.get('/', asyncWrapper(userController.getUsers))
 router.get('/:id', isEntityValid({ params }), asyncWrapper(userController.getUserById))
 router.patch('/:id', isEntityValid({ params }), asyncWrapper(userController.updateUser))
+router.post('/:id/upload-photo', upload.single('file'), asyncWrapper(userController.uploadPhoto))
 
 router.use(restrictTo(ADMIN))
 router.patch('/:id/change-status', isEntityValid({ params }), asyncWrapper(userController.updateStatus))

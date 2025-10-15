@@ -1,8 +1,10 @@
 const Subject = require('~/models/subject')
 
 class SubjectService {
-  async getSubjects() {
-    return await Subject.find()
+  async getSubjects({ categoryId } = {}) {
+    // TODO: move to util function
+    const query = categoryId ? { category: categoryId } : {}
+    return await Subject.find(query)
   }
 
   async createSubject(name, categoryId) {

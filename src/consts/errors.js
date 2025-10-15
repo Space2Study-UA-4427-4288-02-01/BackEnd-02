@@ -99,6 +99,22 @@ const errors = {
     code: 'INVALID_LANGUAGE',
     message: `The language name is invalid. Possible options: ${APP_LANG_ENUM.join(', ')}.`
   },
+  NO_FILE_PROVIDED: {
+    code: 'NO_FILE_PROVIDED',
+    message: 'No file provided.'
+  },
+  UPLOAD_FILE: {
+    code: 'UPLOAD_FILE',
+    message: 'File upload failed.'
+  },
+  GETTING_PUBLIC_URL: {
+    code: 'GETTING_PUBLIC_URL',
+    message: 'Could not retrieve file URL.'
+  },
+  DELETE_FILE : {
+    code: 'DELETE_FILE',
+    message: 'File deletion failed.'
+  },
   DOCUMENT_NOT_FOUND: (document) => ({
     code: 'DOCUMENT_NOT_FOUND',
     message: `${document} with the specified ${document.length > 1 ? 'IDs were' : 'ID was'} not found.`
