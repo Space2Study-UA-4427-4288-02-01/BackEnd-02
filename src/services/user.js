@@ -89,6 +89,7 @@ const userService = {
 
     filteredUpdateData.mainSubjects = { ...user.mainSubjects, [role]: updateData.mainSubjects }
     filteredUpdateData.nativeLanguage = updateData.nativeLanguage || user.nativeLanguage || SPOKEN_LANG_ENUM[0]
+    filteredUpdateData.isFirstLogin = false
 
     await User.findByIdAndUpdate(id, filteredUpdateData, { new: true, runValidators: true }).lean().exec()
   },
