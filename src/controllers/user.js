@@ -48,10 +48,23 @@ const deleteUser = async (req, res) => {
   res.status(204).end()
 }
 
+const uploadPhoto = async (req, res) => {
+  const { id } = req.params
+  const { file } = req
+
+  await userService.uploadPhoto(id, file)
+
+  res.status(200).json({
+    success: true,
+    message: 'File uploaded successfully'
+  })
+}
+
 module.exports = {
   getUsers,
   getUserById,
   deleteUser,
   updateUser,
-  updateStatus
+  updateStatus,
+  uploadPhoto,
 }
