@@ -1,10 +1,11 @@
 const subjectService = require('~/services/subject')
 
 const getSubjects = async (req, res) => {
-  const subjects = await subjectService.getSubjects()
+  const { categoryId } = req.query
+  const subjects = await subjectService.getSubjects({ categoryId })
 
   res.status(200).json({
-    status: true,
+    success: true,
     data: subjects
   })
 }
@@ -15,7 +16,7 @@ const createSubject = async (req, res) => {
   const newSubject = await subjectService.createSubject(name, categoryId)
 
   res.status(201).json({
-    status: true,
+    success: true,
     data: newSubject
   })
 }
