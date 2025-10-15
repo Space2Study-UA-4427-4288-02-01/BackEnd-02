@@ -10,7 +10,7 @@ class FileService {
 
   async uploadFile({ file, id, folder }) {
     if (!file) {
-      createError(400, 'NO_FILE_PROVIDED')
+      throw createError(400, 'NO_FILE_PROVIDED')
     }
 
     const { originalname, buffer, mimetype } = file
@@ -25,8 +25,8 @@ class FileService {
       })
 
     if (uploadError) {
-      createError(500, 'UPLOAD_FILE')
       logger.error('File upload error:', uploadError)
+      throw createError(500, 'UPLOAD_FILE')
     }
 
     const { data: publicURL, error: urlError } = this._client.storage
@@ -34,8 +34,8 @@ class FileService {
       .getPublicUrl(data.path)
 
     if (urlError) {
-      createError(500, 'GETTING_PUBLIC_URL')
       logger.error('Getting public URL error:', urlError)
+      throw createError(500, 'GETTING_PUBLIC_URL')
     }
 
     return publicURL
@@ -47,8 +47,8 @@ class FileService {
       .remove([filePath])
 
     if (error) {
-      createError(500, 'DELETE_FILE')
       logger.error('File deletion error:', error)
+      throw createError(500, 'DELETE_FILE')
     }
 
     return data
