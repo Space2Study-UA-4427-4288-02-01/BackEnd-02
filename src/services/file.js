@@ -9,12 +9,8 @@ class FileService {
   }
 
   async uploadFile({ file, id, folder }) {
-    if (!file) {
-      throw createError(400, 'NO_FILE_PROVIDED')
-    }
-
     const { originalname, buffer, mimetype } = file
-    const filePath = `${folder}/${id}/${originalname}`
+    const filePath = this.getFilePath({ id, folder, originalname })
 
     const { data, error: uploadError } = await this._client.storage
       .from(this._bucket)
@@ -52,6 +48,12 @@ class FileService {
     }
 
     return data
+  }
+
+  getFilePath({ id, folder, originalname }) {
+    const sanitizedName = originalname.replace(/[^a-zA-Z0-9._-]/g, '_')
+    const filePath = `${folder}/${id}/${sanitizedName}`
+    return filePath
   }
 }
 

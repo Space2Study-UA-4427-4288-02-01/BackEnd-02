@@ -107,6 +107,10 @@ const errors = {
     code: 'UPLOAD_FILE',
     message: 'File upload failed.'
   },
+  FIELD_IS_NOT_OF_PROPER_SIZE: {
+    code: 'FIELD_IS_NOT_OF_PROPER_SIZE',
+    message: 'Uploaded file exceeds the maximum allowed size.'
+  },
   GETTING_PUBLIC_URL: {
     code: 'GETTING_PUBLIC_URL',
     message: 'Could not retrieve file URL.'

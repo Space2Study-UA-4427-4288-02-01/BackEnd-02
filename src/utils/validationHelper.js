@@ -3,7 +3,8 @@ const {
   FIELD_IS_NOT_OF_PROPER_TYPE,
   FIELD_IS_NOT_OF_PROPER_LENGTH,
   FIELD_IS_NOT_OF_PROPER_FORMAT,
-  FIELD_IS_NOT_OF_PROPER_ENUM_VALUE
+  FIELD_IS_NOT_OF_PROPER_ENUM_VALUE,
+  FIELD_IS_NOT_OF_PROPER_SIZE
 } = require('~/consts/errors')
 const { createError } = require('./errorsHelper')
 
@@ -38,12 +39,19 @@ const validateEnum = (schemaFieldKey, enumSet, field) => {
   }
 }
 
+const validateSize = (schemaFieldKey, size, field) => {
+  if (field.size > size.max) {
+    throw createError(422, FIELD_IS_NOT_OF_PROPER_SIZE(schemaFieldKey, size))
+  }
+}
+
 const validateFunc = {
   required: validateRequired,
   type: validateType,
   length: validateLength,
   regex: validateRegex,
-  enum: validateEnum
+  enum: validateEnum,
+  size: validateSize
 }
 
 module.exports = {

@@ -1,6 +1,7 @@
 const userService = require('~/services/user')
 const { createForbiddenError } = require('~/utils/errorsHelper')
 const createAggregateOptions = require('~/utils/users/createAggregateOptions')
+const { createError } = require('~/utils/errorsHelper')
 
 const getUsers = async (req, res) => {
   const { skip, limit, sort, match } = createAggregateOptions(req.query)
@@ -52,6 +53,10 @@ const uploadPhoto = async (req, res) => {
   const { id } = req.params
   const { file } = req
 
+  if (id !== req.user.id) throw createForbiddenError()
+  if (!file) throw createError(400, 'NO_FILE_PROVIDED')
+
+  // TODO Cleanup old photo before update
   await userService.uploadPhoto(id, file)
 
   res.status(200).json({

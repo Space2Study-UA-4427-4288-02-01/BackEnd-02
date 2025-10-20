@@ -2,7 +2,12 @@ const lengths = {
   MIN_PASSWORD_LENGTH: 8,
   MAX_PASSWORD_LENGTH: 25,
   MIN_NAME_LENGTH: 1,
-  MAX_NAME_LENGTH: 30
+  MAX_NAME_LENGTH: 30,
+  MAX_FILE_NAME_LENGTH: 100
+}
+
+const sizes = {
+  MAX_FILE_SIZE_MB: 10 * 1024 * 1024
 }
 
 const regex = {
@@ -28,5 +33,6 @@ const enums = {
 module.exports = {
   lengths,
   regex,
-  enums
+  enums,
+  sizes
 }
