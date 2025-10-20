@@ -4,12 +4,22 @@ class CategoryService {
   async getCategories({ searchTerm, skip, limit } = {}) {
     const query = this.buildCategoryQuery(searchTerm)
     const total = await Category.countDocuments(query)
-    const categories = await Category.find(query).skip(skip).limit(limit)
+    const categories = await Category
+      .find(query)
+      .skip(skip)
+      .limit(limit)
+      .lean()
+      .exec()
+
     return { total, categories }
   }
 
   async getCategoryNames() {
-    return await Category.find().select('name').lean().exec()
+    return await Category
+      .find()
+      .select('name')
+      .lean()
+      .exec()
   }
 
   async getCategory(id) {
