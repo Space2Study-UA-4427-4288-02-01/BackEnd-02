@@ -4,7 +4,7 @@ const fileValidationSchema = {
     properties: {
       mimetype: {
         type: 'string',
-        enum: ['image/jpeg', 'image/png']
+        enum: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
       },
       size: {
         type: 'number',
