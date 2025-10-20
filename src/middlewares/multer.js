@@ -1,11 +1,15 @@
 const multer = require('multer')
+const {
+  sizes: { MAX_FILE_SIZE_MB },
+  lengths: { MAX_FILE_NAME_LENGTH }
+} = require('~/consts/validation')
 
 const storage = multer.memoryStorage()
 const upload = multer({
   storage,
   limits: {
-    fileSize: 10 * 1024 * 1024,
-    fieldNameSize: 100
+    fileSize: MAX_FILE_SIZE_MB,
+    fieldNameSize: MAX_FILE_NAME_LENGTH
   }
 })
 

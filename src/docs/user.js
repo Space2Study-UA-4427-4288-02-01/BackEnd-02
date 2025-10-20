@@ -346,7 +346,7 @@
  *                 summary: File size exceeded
  *                 value:
  *                   success: false
- *                   message: "File size exceeds 5MB limit"
+ *                   message: "File size exceeds 10MB limit"
  *                   status: 400
  *       401:
  *         $ref: '#/components/responses/UnauthorizedAccess'
