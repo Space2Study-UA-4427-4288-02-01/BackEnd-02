@@ -1,12 +1,13 @@
 const categoryService = require('~/services/category')
 
 const getCategories = async (req, res) => {
-  const { total, categories } = await categoryService.getCategories(req.query)
+  const { total, categories, hasMore } = await categoryService.getCategories(req.query)
 
   res.status(200).json({
     success: true,
     total,
-    data: categories
+    hasMore,
+    data: categories,
   })
 }
 

@@ -116,8 +116,27 @@
  *             $ref: '#/components/schemas/Category'
  *         count:
  *           type: number
- *           description: Total number of categories
- *           example: 10
+ *           description: Number of categories returned in current response
+ *           example: 5
+ *         total:
+ *           type: number
+ *           description: Total number of categories matching the query
+ *           example: 15
+ *         pagination:
+ *           type: object
+ *           properties:
+ *             skip:
+ *               type: number
+ *               description: Number of categories skipped
+ *               example: 0
+ *             limit:
+ *               type: number
+ *               description: Maximum number of categories per page
+ *               example: 10
+ *             hasMore:
+ *               type: boolean
+ *               description: Whether there are more categories available
+ *               example: true
  *
  *     CategoryNamesResponse:
  *       type: object
@@ -229,9 +248,24 @@
  *     tags:
  *       - Categories
  *     summary: Get all categories
- *     description: Retrieve a list of all available categories with their appearance settings and offer counts
+ *     description: Retrieve a list of all available categories with their appearance settings and offer counts. Supports pagination and search functionality.
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search term to filter categories by name (case-insensitive)
+ *         example: "math"
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number for loadMore pagination
+ *         example: 1
  *     responses:
  *       200:
  *         description: Categories retrieved successfully
@@ -265,7 +299,8 @@
  *                         tutor: 6
  *                       createdAt: "2024-01-15T10:30:00Z"
  *                       updatedAt: "2024-01-20T14:45:00Z"
- *                   count: 2
+ *                   total: 2
+ *                   hasMore: false
  *       401:
  *         $ref: '#/components/responses/UnauthorizedAccess'
  *       500:

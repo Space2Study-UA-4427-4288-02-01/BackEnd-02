@@ -1,23 +1,35 @@
 const Category = require('~/models/category')
 
 class CategoryService {
-  async getCategories({ searchTerm, skip, limit } = {}) {
-    const query = this.buildCategoryQuery(searchTerm)
+  async getCategories({ search, page } = {}) {
+    const query = this.buildCategoryQuery(search)
     const total = await Category.countDocuments(query)
+
+    const limit = 4
+    const skip = (Number(page) - 1) * limit
+
     const categories = await Category
       .find(query)
+      .select('name')
       .skip(skip)
       .limit(limit)
+      .sort({ name: 1 })
       .lean()
       .exec()
 
-    return { total, categories }
+    return {
+      total,
+      categories,
+      totalPages: Math.ceil(total / limit),
+      hasMore: skip + limit < total
+    }
   }
 
   async getCategoryNames() {
     return await Category
       .find()
       .select('name')
+      .sort({ name: 1 })
       .lean()
       .exec()
   }
@@ -32,11 +44,13 @@ class CategoryService {
     return await newCategory.save()
   }
 
-  buildCategoryQuery(searchTerm) {
-    if (searchTerm) {
-      return { name: { $regex: searchTerm, $options: 'i' } }
+  buildCategoryQuery(search = '') {
+    const searchTerm = search.trim()
+    if (!searchTerm?.length) {
+      return {}
     }
-    return {}
+
+    return { name: { $regex: searchTerm, $options: 'i' } }
   }
 }
 
