@@ -6,7 +6,10 @@ class CategoryService {
     const total = await Category.countDocuments(query)
 
     const limit = 4
-    const skip = (Number(page) - 1) * limit
+    const pageNum = Math.max(1, Number.isFinite(Number(page)) ? parseInt(page, 10) : 1)
+    const skip = (pageNum - 1) * limit
+    const totalPages = Math.ceil(total / limit)
+    const hasMore = pageNum < totalPages
 
     const categories = await Category
       .find(query)
@@ -20,8 +23,8 @@ class CategoryService {
     return {
       total,
       categories,
-      totalPages: Math.ceil(total / limit),
-      hasMore: skip + limit < total
+      totalPages,
+      hasMore
     }
   }
 
@@ -44,13 +47,16 @@ class CategoryService {
     return await newCategory.save()
   }
 
+  // TODO additional sanitization
   buildCategoryQuery(search = '') {
     const searchTerm = search.trim()
+    const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
     if (!searchTerm?.length) {
       return {}
     }
 
-    return { name: { $regex: searchTerm, $options: 'i' } }
+    return { name: { $regex: escapedTerm, $options: 'i' } }
   }
 }
 
