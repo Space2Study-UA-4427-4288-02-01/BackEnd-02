@@ -13,17 +13,15 @@ const {
   getCategoryNames
 } = require('~/controllers/category')
 
-// TODO generate swagger docs for these endpoints
 const params = [{ model: Category, idName: 'id' }]
 
-// router.use(authMiddleware)
+router.use(authMiddleware)
 
 router.param('id', idValidation)
 
 router.get('/', asyncWrapper(getCategories))
 router.get('/names', asyncWrapper(getCategoryNames))
 router.get('/:id', isEntityValid({ params }), asyncWrapper(getCategory))
-// TODO uncomment to enable createCategory
 router.post('/', validationMiddleware(categoryValidationSchema), asyncWrapper(createCategory))
 
 module.exports = router
