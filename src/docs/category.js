@@ -300,7 +300,8 @@
  *                       createdAt: "2024-01-15T10:30:00Z"
  *                       updatedAt: "2024-01-20T14:45:00Z"
  *                   total: 2
- *                   hasMore: false
+ *                   currentPage: 1
+ *                   totalPages: 1
  *       401:
  *         $ref: '#/components/responses/UnauthorizedAccess'
  *       500:

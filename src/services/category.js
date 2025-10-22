@@ -9,7 +9,6 @@ class CategoryService {
     const pageNum = Math.max(1, Number.isFinite(Number(page)) ? parseInt(page, 10) : 1)
     const skip = (pageNum - 1) * limit
     const totalPages = Math.ceil(total / limit)
-    const hasMore = pageNum < totalPages
 
     const categories = await Category
       .find(query)
@@ -24,7 +23,7 @@ class CategoryService {
       total,
       categories,
       totalPages,
-      hasMore
+      currentPage: pageNum,
     }
   }
 
