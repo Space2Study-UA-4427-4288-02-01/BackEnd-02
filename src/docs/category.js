@@ -122,21 +122,12 @@
  *           type: number
  *           description: Total number of categories matching the query
  *           example: 15
- *         pagination:
- *           type: object
- *           properties:
- *             skip:
- *               type: number
- *               description: Number of categories skipped
- *               example: 0
- *             limit:
- *               type: number
- *               description: Maximum number of categories per page
- *               example: 10
- *             hasMore:
- *               type: boolean
- *               description: Whether there are more categories available
- *               example: true
+ *         currentPage:
+ *           type: number
+ *           example: 1
+ *         totalPages:
+ *           type: number
+ *           example: 5
  *
  *     CategoryNamesResponse:
  *       type: object
