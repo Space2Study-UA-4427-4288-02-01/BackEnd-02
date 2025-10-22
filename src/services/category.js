@@ -1,14 +1,60 @@
 const Category = require('~/models/category')
 
 class CategoryService {
-  async getCategories() {
-    return await Category.find()
+  async getCategories({ search, page } = {}) {
+    const query = this.buildCategoryQuery(search)
+    const total = await Category.countDocuments(query)
+
+    const limit = 4
+    const pageNum = Math.max(1, Number.isFinite(Number(page)) ? parseInt(page, 10) : 1)
+    const skip = (pageNum - 1) * limit
+    const totalPages = Math.ceil(total / limit)
+
+    const categories = await Category
+      .find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort({ name: 1 })
+      .lean()
+      .exec()
+
+    return {
+      total,
+      categories,
+      totalPages,
+      currentPage: pageNum,
+    }
+  }
+
+  async getCategoryNames() {
+    return await Category
+      .find()
+      .select('name')
+      .sort({ name: 1 })
+      .lean()
+      .exec()
+  }
+
+  async getCategory(id) {
+    return await Category.findById(id)
   }
 
   async createCategory(name, appearance) {
     const { icon, color } = appearance ?? {}
     const newCategory = new Category({ name, appearance: { icon, color } })
     return await newCategory.save()
+  }
+
+  // TODO additional sanitization
+  buildCategoryQuery(search = '') {
+    const searchTerm = search.trim()
+    const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+    if (!searchTerm?.length) {
+      return {}
+    }
+
+    return { name: { $regex: escapedTerm, $options: 'i' } }
   }
 }
 
