@@ -12,7 +12,6 @@ class CategoryService {
 
     const categories = await Category
       .find(query)
-      .select('name')
       .skip(skip)
       .limit(limit)
       .sort({ name: 1 })
