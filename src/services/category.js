@@ -36,7 +36,7 @@ class CategoryService {
   }
 
   async getCategory(id) {
-    return await Category.findById(id)
+    return await Category.findById(id).lean().exec()
   }
 
   async createCategory(name, appearance) {
@@ -45,7 +45,6 @@ class CategoryService {
     return await newCategory.save()
   }
 
-  // TODO additional sanitization
   buildCategoryQuery(search = '') {
     const searchTerm = search.trim()
     const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')

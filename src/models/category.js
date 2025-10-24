@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose')
 const { CATEGORY } = require('~/consts/models')
+const Offer = require('./offer')
 
 const {
   FIELD_CANNOT_BE_EMPTY,
@@ -26,16 +27,6 @@ const categorySchema = new Schema(
         type: String,
         default: '#66C42C'
       }
-    },
-    totalOffers: {
-      student: {
-        type: Number,
-        default: 0
-      },
-      tutor: {
-        type: Number,
-        default: 0
-      }
     }
   },
   {
@@ -46,5 +37,48 @@ const categorySchema = new Schema(
     id: false
   }
 )
+
+// TODO check if this works after Offer CRUD implementation
+categorySchema.methods.getTotalOffers = async function() {
+  const [studentCount, tutorCount] = await Promise.all([
+    Offer.countDocuments({ category: this._id, role: 'student' }),
+    Offer.countDocuments({ category: this._id, role: 'tutor' })
+  ])
+  
+  return {
+    student: studentCount,
+    tutor: tutorCount
+  }
+}
+
+categorySchema.statics.findWithTotalOffers = async function() {
+  const categories = await this.find()
+  const categoriesWithOffers = await Promise.all(
+    categories.map(async (category) => {
+      const [studentCount, tutorCount] = await Promise.all([
+        Offer.countDocuments({ category: category._id, role: 'student' }),
+        Offer.countDocuments({ category: category._id, role: 'tutor' })
+      ])
+      
+      return {
+        ...category,
+        totalOffers: {
+          student: studentCount,
+          tutor: tutorCount
+        }
+      }
+    })
+  )
+
+  return categoriesWithOffers
+}
+
+categorySchema.virtual('totalOffers').get(function() {
+  return this._totalOffers || { student: 0, tutor: 0 }
+})
+
+categorySchema.virtual('totalOffers').set(function(value) {
+  this._totalOffers = value
+})
 
 module.exports = model(CATEGORY, categorySchema)
