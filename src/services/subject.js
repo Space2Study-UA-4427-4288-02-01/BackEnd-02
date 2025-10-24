@@ -1,6 +1,4 @@
 const Subject = require('~/models/subject')
-const User = require('~/models/user')
-// const userService = require('~/services/user')
 
 class SubjectService {
   async getSubjects({ categoryId, search, page } = {}) {
@@ -11,8 +9,6 @@ class SubjectService {
     const pageNum = Math.max(1, Number.isFinite(Number(page)) ? parseInt(page, 10) : 1)
     const skip = (pageNum - 1) * limit
     const totalPages = Math.ceil(total / limit)
-
-    console.log('query', query)
 
     const subjects = await Subject
       .find(query)

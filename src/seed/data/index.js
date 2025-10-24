@@ -35,7 +35,7 @@ const subjectsByCategory = {
   'Science': ['General Science', 'Earth Science', 'Environmental Science', 'Astronomy', 'Forensic Science', 'Marine Science', 'Meteorology', 'Geology'],
   'Literature': ['Creative Writing', 'Poetry', 'World Literature', 'American Literature', 'British Literature', 'Literary Analysis', 'Drama', 'Mythology'],
   'History': ['World History', 'Ancient History', 'Medieval History', 'Modern History', 'Art History', 'Military History', 'Social History', 'Cultural History'],
-  'Art': ['Drawing', 'Painting', 'Sculpture', 'Digital Art', 'Graphic Design', 'Photography', 'Ceramics', 'Art History'],
+  'Art': ['Drawing', 'Painting', 'Sculpture', 'Digital Art', 'Graphic Design', 'Photography', 'Ceramics', 'History of Art'],
   'Music': ['Music Theory', 'Piano', 'Guitar', 'Violin', 'Voice', 'Composition', 'Music History', 'Audio Engineering'],
   'Physical Education': ['Fitness Training', 'Sports Medicine', 'Nutrition', 'Team Sports', 'Individual Sports', 'Dance', 'Yoga', 'Athletic Training'],
   'Computer Science': ['Programming', 'Web Development', 'Data Structures', 'Algorithms', 'Database Design', 'Machine Learning', 'Cybersecurity', 'Software Engineering'],

@@ -1,6 +1,7 @@
 const databaseInitialization = require('~/initialization/database')
 const checkUserExistence = require('~/seed/checkUserExistence')
 const seedCategories = require('~/seed/categories')
+const seedSubjects = require('~/seed/subjects')
 const initialization = require('~/initialization/initialization')
 const redisService = require('~/services/redis')
 const logger = require('~/logger/logger')
@@ -28,6 +29,7 @@ const serverSetup = async (app) => {
 
   if (process.env.NODE_ENV !== 'production') {
     await seedCategories()
+    await seedSubjects()
   }
 
   await redisService.connect()

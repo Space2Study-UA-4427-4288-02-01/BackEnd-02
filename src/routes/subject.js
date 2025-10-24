@@ -21,7 +21,7 @@ const {
 
 const params = [{ model: Subject, idName: 'id' }]
 
-router.use(authMiddleware)
+// router.use(authMiddleware)
 router.param('id', idValidation)
 
 // TODO add auth, isEntityValid, validationMiddleware middlewares
