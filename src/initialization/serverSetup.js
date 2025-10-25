@@ -1,7 +1,5 @@
 const databaseInitialization = require('~/initialization/database')
-const checkUserExistence = require('~/seed/checkUserExistence')
-const seedCategories = require('~/seed/categories')
-const seedSubjects = require('~/seed/subjects')
+const seedData = require('~/seed/seedData')
 const initialization = require('~/initialization/initialization')
 const redisService = require('~/services/redis')
 const logger = require('~/logger/logger')
@@ -25,15 +23,11 @@ process.on('unhandledRejection', async (reason, promise) => {
 
 const serverSetup = async (app) => {
   await databaseInitialization()
-  await checkUserExistence()
-
-  if (process.env.NODE_ENV !== 'production') {
-    await seedCategories()
-    await seedSubjects()
-  }
-
+  await seedData()
   await redisService.connect()
+
   initialization(app)
+
   return app.listen(SERVER_PORT, () => {
     logger.info(`Server is running on port ${SERVER_PORT}`)
     if (process.env.NODE_ENV !== 'test') {

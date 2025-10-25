@@ -22,17 +22,25 @@ const seedSubjects = async () => {
         .exec()
 
       if (existingSubjects.length > 0) {
-        return
+        return false
       }
 
       const subjectDocs = subjects.map((subject) => ({
         name: subject,
         category: category._id
       }))
+
       await Subject.insertMany(subjectDocs)
+      return true
     })
 
-    await Promise.all(subjectsPromises)
+    const result = await Promise.all(subjectsPromises)
+
+    if (result.every((res) => !res)) {
+      logger.info('No new subjects to seed.')
+      return
+    }
+
     logger.info('Subjects seeded successfully.')
   } catch (err) {
     logger.error('Error seeding subjects:', err)
