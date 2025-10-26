@@ -15,8 +15,6 @@ class SubjectService {
       .skip(skip)
       .limit(limit)
       .sort({ name: 1 })
-      .lean()
-      .exec()
 
     return {
       total,

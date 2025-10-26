@@ -38,47 +38,9 @@ const categorySchema = new Schema(
   }
 )
 
-// TODO check if this works after Offer CRUD implementation
-categorySchema.methods.getTotalOffers = async function() {
-  const [studentCount, tutorCount] = await Promise.all([
-    Offer.countDocuments({ category: this._id, role: 'student' }),
-    Offer.countDocuments({ category: this._id, role: 'tutor' })
-  ])
-  
-  return {
-    student: studentCount,
-    tutor: tutorCount
-  }
-}
-
-categorySchema.statics.findWithTotalOffers = async function() {
-  const categories = await this.find()
-  const categoriesWithOffers = await Promise.all(
-    categories.map(async (category) => {
-      const [studentCount, tutorCount] = await Promise.all([
-        Offer.countDocuments({ category: category._id, role: 'student' }),
-        Offer.countDocuments({ category: category._id, role: 'tutor' })
-      ])
-      
-      return {
-        ...category,
-        totalOffers: {
-          student: studentCount,
-          tutor: tutorCount
-        }
-      }
-    })
-  )
-
-  return categoriesWithOffers
-}
-
+// TODO remove hardcoded 0 when Offer CRUD is implemented
 categorySchema.virtual('totalOffers').get(function() {
   return this._totalOffers || { student: 0, tutor: 0 }
-})
-
-categorySchema.virtual('totalOffers').set(function(value) {
-  this._totalOffers = value
 })
 
 module.exports = model(CATEGORY, categorySchema)

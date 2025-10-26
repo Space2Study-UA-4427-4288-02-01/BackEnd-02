@@ -29,51 +29,13 @@ const subjectSchema = new Schema(
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
     versionKey: false,
-    id: false
+    id: false,
   }
 )
 
-// TODO check if this works after Offer CRUD implementation
-subjectSchema.methods.getTotalOffers = async function() {  
-  const [studentCount, tutorCount] = await Promise.all([
-    Offer.countDocuments({ subject: this._id, role: 'student' }),
-    Offer.countDocuments({ subject: this._id, role: 'tutor' })
-  ])
-  
-  return {
-    student: studentCount,
-    tutor: tutorCount
-  }
-}
-
-subjectSchema.statics.findWithTotalOffers = async function() {
-  const subjects = await this.find()
-  const subjectsWithOffers = await Promise.all(
-    subjects.map(async (subject) => {
-      const [studentCount, tutorCount] = await Promise.all([
-        Offer.countDocuments({ subject: subject._id, role: 'student' }),
-        Offer.countDocuments({ subject: subject._id, role: 'tutor' })
-      ])
-
-      return {
-        ...subject,
-        totalOffers: {
-          student: studentCount,
-          tutor: tutorCount
-        }
-      }
-    })
-  )
-
-  return subjectsWithOffers
-}
-
+// TODO remove hardcoded 0 when Offer CRUD is implemented
 subjectSchema.virtual('totalOffers').get(function() {
-  return this._totalOffers || { student: 0, tutor: 0 }
-})
-
-subjectSchema.virtual('totalOffers').set(function(value) {
-  this._totalOffers = value
+  return { student: 0, tutor: 0 }
 })
 
 module.exports = model(SUBJECT, subjectSchema)
