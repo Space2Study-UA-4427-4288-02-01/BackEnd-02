@@ -12,6 +12,7 @@ class CategoryService {
 
     const categories = await Category
       .find(query)
+      .select('name appearance')
       .skip(skip)
       .limit(limit)
       .sort({ name: 1 })
@@ -34,7 +35,7 @@ class CategoryService {
   }
 
   async getCategory(id) {
-    return await Category.findById(id).lean().exec()
+    return await Category.findById(id).select('name appearance')
   }
 
   async createCategory(name, appearance) {

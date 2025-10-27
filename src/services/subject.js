@@ -12,6 +12,7 @@ class SubjectService {
 
     const subjects = await Subject
       .find(query)
+      .select('name category')
       .skip(skip)
       .limit(limit)
       .sort({ name: 1 })
@@ -34,7 +35,9 @@ class SubjectService {
   }
 
   async getSubject(id) {
-    return await Subject.findById(id).lean().exec()
+    return await Subject
+      .findById(id)
+      .select('name category')
   }
 
   async createSubject(name, categoryId) {
@@ -48,7 +51,7 @@ class SubjectService {
   }
 
   async deleteSubject(id) {
-    return await Subject.findByIdAndDelete(id).lean().exec()
+    return await Subject.findByIdAndDelete(id)
   }
 
   buildCategoryQuery(categoryId, search = '') {
