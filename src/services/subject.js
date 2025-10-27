@@ -1,11 +1,12 @@
 const Subject = require('~/models/subject')
+const { PER_PAGE } = require('~/consts/services')
 
 class SubjectService {
   async getSubjects({ categoryId, search, page } = {}) {
     const query = this.buildCategoryQuery(categoryId, search)
     const total = await Subject.countDocuments(query)
 
-    const limit = 4
+    const limit = PER_PAGE
     const pageNum = Math.max(1, Number.isFinite(Number(page)) ? parseInt(page, 10) : 1)
     const skip = (pageNum - 1) * limit
     const totalPages = Math.ceil(total / limit)
@@ -20,6 +21,7 @@ class SubjectService {
     return {
       total,
       subjects,
+      perPage: limit,
       totalPages,
       currentPage: pageNum,
     }

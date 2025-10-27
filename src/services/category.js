@@ -1,11 +1,12 @@
 const Category = require('~/models/category')
+const { PER_PAGE } = require('~/consts/services')
 
 class CategoryService {
   async getCategories({ search, page } = {}) {
     const query = this.buildCategoryQuery(search)
     const total = await Category.countDocuments(query)
 
-    const limit = 4
+    const limit = PER_PAGE
     const pageNum = Math.max(1, Number.isFinite(Number(page)) ? parseInt(page, 10) : 1)
     const skip = (pageNum - 1) * limit
     const totalPages = Math.ceil(total / limit)
@@ -21,6 +22,7 @@ class CategoryService {
       total,
       categories,
       totalPages,
+      perPage: limit,
       currentPage: pageNum,
     }
   }

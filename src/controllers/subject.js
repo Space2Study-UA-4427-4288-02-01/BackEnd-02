@@ -1,13 +1,14 @@
 const subjectService = require('~/services/subject')
 
 const getSubjects = async (req, res) => {
-  const { total, currentPage, totalPages, subjects } = await subjectService.getSubjects(req.query)
+  const { total, perPage, currentPage, totalPages, subjects } = await subjectService.getSubjects(req.query)
 
   res.status(200).json({
     success: true,
     total,
     currentPage,
     totalPages,
+    perPage,
     data: subjects,
   })
 }
