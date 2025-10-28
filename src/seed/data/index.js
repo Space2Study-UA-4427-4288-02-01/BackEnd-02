@@ -25,7 +25,32 @@ const categoriesData = [
 
 const categoriesNames = categoriesData.map(category => category.name)
 
+/**
+ * Subjects Data by Category
+ * This object contains subject names organized by category.
+ * Each category maps to an array of related subjects.
+ */
+const subjectsByCategory = {
+  'Mathematics': ['Algebra', 'Geometry', 'Calculus', 'Statistics', 'Trigonometry', 'Probability', 'Number Theory', 'Linear Algebra'],
+  'Science': ['General Science', 'Earth Science', 'Environmental Science', 'Astronomy', 'Forensic Science', 'Marine Science', 'Meteorology', 'Geology'],
+  'Literature': ['Creative Writing', 'Poetry', 'World Literature', 'American Literature', 'British Literature', 'Literary Analysis', 'Drama', 'Mythology'],
+  'History': ['World History', 'Ancient History', 'Medieval History', 'Modern History', 'Art History', 'Military History', 'Social History', 'Cultural History'],
+  'Art': ['Drawing', 'Painting', 'Sculpture', 'Digital Art', 'Graphic Design', 'Photography', 'Ceramics', 'History of Art'],
+  'Music': ['Music Theory', 'Piano', 'Guitar', 'Violin', 'Voice', 'Composition', 'Music History', 'Audio Engineering'],
+  'Physical Education': ['Fitness Training', 'Sports Medicine', 'Nutrition', 'Team Sports', 'Individual Sports', 'Dance', 'Yoga', 'Athletic Training'],
+  'Computer Science': ['Programming', 'Web Development', 'Data Structures', 'Algorithms', 'Database Design', 'Machine Learning', 'Cybersecurity', 'Software Engineering'],
+  'Biology': ['Cell Biology', 'Genetics', 'Ecology', 'Anatomy', 'Physiology', 'Microbiology', 'Botany', 'Zoology'],
+  'Chemistry': ['General Chemistry', 'Organic Chemistry', 'Inorganic Chemistry', 'Physical Chemistry', 'Analytical Chemistry', 'Biochemistry', 'Materials Science', 'Chemical Engineering'],
+  'Physics': ['Classical Mechanics', 'Thermodynamics', 'Electromagnetism', 'Quantum Physics', 'Optics', 'Astrophysics', 'Nuclear Physics', 'Particle Physics'],
+  'Economics': ['Microeconomics', 'Macroeconomics', 'International Economics', 'Public Economics', 'Labor Economics', 'Financial Economics', 'Development Economics', 'Econometrics'],
+  'Philosophy': ['Ethics', 'Logic', 'Metaphysics', 'Epistemology', 'Political Philosophy', 'Philosophy of Mind', 'Ancient Philosophy', 'Modern Philosophy'],
+  'Psychology': ['Cognitive Psychology', 'Social Psychology', 'Developmental Psychology', 'Clinical Psychology', 'Behavioral Psychology', 'Neuropsychology', 'Educational Psychology', 'Abnormal Psychology'],
+  'Sociology': ['Social Theory', 'Research Methods', 'Social Inequality', 'Urban Sociology', 'Family Sociology', 'Crime and Deviance', 'Social Movements', 'Cultural Sociology'],
+  'Anthropology': ['Cultural Anthropology', 'Physical Anthropology', 'Archaeology', 'Linguistic Anthropology', 'Medical Anthropology', 'Applied Anthropology', 'Forensic Anthropology', 'Environmental Anthropology']
+}
+
 module.exports = {
   categoriesData,
-  categoriesNames
+  categoriesNames,
+  subjectsByCategory
 }

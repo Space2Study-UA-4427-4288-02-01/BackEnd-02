@@ -10,12 +10,12 @@ const {
   getCategories,
   createCategory,
   getCategory,
-  getCategoryNames
+  getCategoryNames,
 } = require('~/controllers/category')
 
 const params = [{ model: Category, idName: 'id' }]
 
-// router.use(authMiddleware)
+router.use(authMiddleware)
 router.param('id', idValidation)
 
 router.get('/', asyncWrapper(getCategories))

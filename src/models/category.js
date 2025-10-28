@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose')
 const { CATEGORY } = require('~/consts/models')
+const Offer = require('./offer')
 
 const {
   FIELD_CANNOT_BE_EMPTY,
@@ -26,16 +27,6 @@ const categorySchema = new Schema(
         type: String,
         default: '#66C42C'
       }
-    },
-    totalOffers: {
-      student: {
-        type: Number,
-        default: 0
-      },
-      tutor: {
-        type: Number,
-        default: 0
-      }
     }
   },
   {
@@ -46,5 +37,10 @@ const categorySchema = new Schema(
     id: false
   }
 )
+
+// TODO remove hardcoded 0 when Offer CRUD is implemented
+categorySchema.virtual('totalOffers').get(function() {
+  return this._totalOffers || { student: 0, tutor: 0 }
+})
 
 module.exports = model(CATEGORY, categorySchema)

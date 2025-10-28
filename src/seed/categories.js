@@ -1,6 +1,6 @@
 const Category = require('~/models/category')
 const logger = require('~/logger/logger')
-const { categoriesData, categoriesNames } = require('~/seed/data')
+const { categoriesData, categoriesNames } = require('./data')
 const { getItemsToSeed } = require('./utils')
 
 const seedCategories = async () => {

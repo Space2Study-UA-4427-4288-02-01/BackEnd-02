@@ -1,16 +1,69 @@
 const Subject = require('~/models/subject')
+const { PER_PAGE } = require('~/consts/services')
 
 class SubjectService {
-  async getSubjects({ categoryId } = {}) {
-    // TODO: move to util function
-    const query = categoryId ? { category: categoryId } : {}
-    return await Subject.find(query)
+  async getSubjects({ categoryId, search, page } = {}) {
+    const query = this.buildCategoryQuery(categoryId, search)
+    const total = await Subject.countDocuments(query)
+
+    const limit = PER_PAGE
+    const pageNum = Math.max(1, Number.isFinite(Number(page)) ? parseInt(page, 10) : 1)
+    const skip = (pageNum - 1) * limit
+    const totalPages = Math.ceil(total / limit)
+
+    const subjects = await Subject
+      .find(query)
+      .select('name category')
+      .skip(skip)
+      .limit(limit)
+      .sort({ name: 1 })
+
+    return {
+      total,
+      subjects,
+      perPage: limit,
+      totalPages,
+      currentPage: pageNum,
+    }
+  }
+
+  async getSubjectsNames() {
+    return await Subject
+      .find()
+      .select('name')
+      .sort({ name: 1 })
+      .lean()
+      .exec()
+  }
+
+  async getSubject(id) {
+    return await Subject
+      .findById(id)
+      .select('name category')
   }
 
   async createSubject(name, categoryId) {
     const newSubject = new Subject({ name, category: categoryId })
 
     return await newSubject.save()
+  }
+
+  async updateSubject(id, name) {
+    return await Subject.findByIdAndUpdate(id, { name }, { new: true }).lean().exec()
+  }
+
+  async deleteSubject(id) {
+    return await Subject.findByIdAndDelete(id)
+  }
+
+  buildCategoryQuery(categoryId, search = '') {
+    const searchTerm = search.trim()
+    const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+    return {
+      ...(searchTerm?.length > 0 ? { name: { $regex: escapedTerm, $options: 'i' } } : {}),
+      ...(categoryId ? { category: categoryId } : {})
+    }
   }
 }
 

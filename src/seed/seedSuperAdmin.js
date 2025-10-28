@@ -20,6 +20,12 @@ const SeedSuperAdmin = {
         isEmailConfirmed: true
       }
 
+      const existingSuperAdmin = await User.findOne({ email: superAdmin.email }).lean().exec()
+      if (existingSuperAdmin) {
+        logger.info('Super admin already exists.')
+        return null
+      }
+
       return await User.create(superAdmin)
     } catch (err) {
       logger.error(err)

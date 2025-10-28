@@ -1,27 +1,28 @@
 const Category = require('~/models/category')
+const { PER_PAGE } = require('~/consts/services')
 
 class CategoryService {
   async getCategories({ search, page } = {}) {
     const query = this.buildCategoryQuery(search)
     const total = await Category.countDocuments(query)
 
-    const limit = 4
+    const limit = PER_PAGE
     const pageNum = Math.max(1, Number.isFinite(Number(page)) ? parseInt(page, 10) : 1)
     const skip = (pageNum - 1) * limit
     const totalPages = Math.ceil(total / limit)
 
     const categories = await Category
       .find(query)
+      .select('name appearance')
       .skip(skip)
       .limit(limit)
       .sort({ name: 1 })
-      .lean()
-      .exec()
 
     return {
       total,
       categories,
       totalPages,
+      perPage: limit,
       currentPage: pageNum,
     }
   }
@@ -36,7 +37,7 @@ class CategoryService {
   }
 
   async getCategory(id) {
-    return await Category.findById(id)
+    return await Category.findById(id).select('name appearance')
   }
 
   async createCategory(name, appearance) {
@@ -45,7 +46,6 @@ class CategoryService {
     return await newCategory.save()
   }
 
-  // TODO additional sanitization
   buildCategoryQuery(search = '') {
     const searchTerm = search.trim()
     const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
