@@ -27,10 +27,10 @@ class SubjectService {
     }
   }
 
-  async getSubjectsNames() {
+  async getSubjectsNames({ categoryId } = {}) {
     return await Subject
-      .find()
-      .select('name')
+      .find({ ...(categoryId ? { category: categoryId } : {}) })
+      .select('name category')
       .sort({ name: 1 })
       .lean()
       .exec()

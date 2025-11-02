@@ -14,7 +14,7 @@ const getSubjects = async (req, res) => {
 }
 
 const getSubjectsNames = async (req, res) => {
-  const subjectNames = await subjectService.getSubjectsNames()
+  const subjectNames = await subjectService.getSubjectsNames(req.query)
 
   res.status(200).json({
     success: true,
