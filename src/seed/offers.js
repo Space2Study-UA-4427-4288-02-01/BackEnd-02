@@ -8,7 +8,7 @@ const seedOffers = async () => {
   try {
     const offers = await Offer.find().lean().exec()
     if (offers.length > 0) {
-      logger.info('Offers already exist. No new offers to seed.')
+      logger.info('No new offers to seed.')
       return
     }
 
@@ -26,11 +26,24 @@ const seedOffers = async () => {
         return null
       }
 
-      const newOffer = new Offer({
-        ...rest,
+      const commonPayload = {
         author: author._id,
         subject: subject._id,
-        category: subject.category,
+        category: subject.category
+      }
+
+      const existingOffer = await Offer.findOne({
+        title: rest.title,
+        ...commonPayload
+      }).lean().exec()
+
+      if (existingOffer) {
+        return null
+      }
+
+      const newOffer = new Offer({
+        ...rest,
+        ...commonPayload
       })
 
       return newOffer.save()

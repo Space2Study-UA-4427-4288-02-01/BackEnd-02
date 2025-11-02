@@ -5,9 +5,10 @@ const toObjectId = (id) => {
   return new Types.ObjectId(id)
 }
 
-const buildOfferQuery = ({ search, categoryId, subjectId, languages, status, skip, limit } = {}) => {
+const buildOfferQuery = ({ search, categoryId, subjectId, languages, priceMin, priceMax, status, skip, limit } = {}) => {
   const escapedTerm = search?.trim()?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const langsArray = languages ? JSON.parse(languages) : null
+  const statusArray = status ? JSON.parse(status) : null
 
   const categoryObjectId = toObjectId(categoryId)
   const subjectObjectId = toObjectId(subjectId)
@@ -61,7 +62,13 @@ const buildOfferQuery = ({ search, categoryId, subjectId, languages, status, ski
         ...(categoryObjectId ? { category: categoryObjectId } : {}),
         ...(subjectObjectId ? { subject: subjectObjectId } : {}),
         ...(langsArray ? { languages: { $in: langsArray } } : {}),
-        ...(status ? { status: status } : {})
+        ...(statusArray ? { status: { $in: statusArray } } : {}),
+        ...(priceMin || priceMax ? {
+          price: {
+            ...(priceMin ? { $gte: Number(priceMin) } : {}),
+            ...(priceMax ? { $lte: Number(priceMax) } : {})
+          }
+        } : {})
       }
     },
     // Lookup subject and category

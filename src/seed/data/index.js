@@ -453,6 +453,130 @@ const offersData = [
     subject: 'Cultural Anthropology',
     category: 'Anthropology',
     status: 'active'
+  },
+
+  // Additional offers for Computer Science + Web Development combination
+  {
+    title: 'Full-Stack JavaScript Development with Node.js and React',
+    description: 'Master both frontend and backend development using modern JavaScript technologies. Build scalable applications with React, Node.js, Express, and MongoDB.',
+    author: 'emaillubomyr103@gmail.com',
+    authorRole: 'tutor',
+    price: 65,
+    proficiencyLevel: 'Advanced',
+    languages: ['English', 'Ukrainian'],
+    subject: 'Web Development',
+    category: 'Computer Science',
+    status: 'active'
+  },
+  {
+    title: 'Responsive Web Design with CSS Grid and Flexbox',
+    description: 'Learn to create beautiful, responsive websites using modern CSS techniques. Master CSS Grid, Flexbox, and mobile-first design principles.',
+    author: 'ihor.chernobai.softserveinc@gmail.com',
+    authorRole: 'tutor',
+    price: 40,
+    proficiencyLevel: 'Beginner',
+    languages: ['English', 'Polish', 'Ukrainian'],
+    subject: 'Web Development',
+    category: 'Computer Science',
+    status: 'active'
+  },
+  {
+    title: 'Advanced React Patterns and Performance Optimization',
+    description: 'Deep dive into advanced React concepts including hooks, context API, performance optimization, and state management with Redux. Build production-ready applications.',
+    author: 'fullstackjs.02.01@gmail.com',
+    authorRole: 'tutor',
+    price: 75,
+    proficiencyLevel: 'Professional',
+    languages: ['English', 'German'],
+    subject: 'Web Development',
+    category: 'Computer Science',
+    status: 'active'
+  },
+  {
+    title: 'Web Development Essentials for Complete Beginners',
+    description: 'Start your web development journey from scratch. Learn HTML, CSS, and JavaScript basics through hands-on projects. No prior coding experience required.',
+    author: 'testtutor@email.com',
+    authorRole: 'tutor',
+    price: 35,
+    proficiencyLevel: 'Beginner',
+    languages: ['English', 'Spanish'],
+    subject: 'Web Development',
+    category: 'Computer Science',
+    status: 'draft'
+  },
+  {
+    title: 'TypeScript for Modern Web Applications',
+    description: 'Learn TypeScript fundamentals and advanced types to build robust, type-safe web applications. Integrate TypeScript with React, Angular, or Vue frameworks.',
+    author: 'emaillubomyr103@gmail.com',
+    authorRole: 'tutor',
+    price: 70,
+    proficiencyLevel: 'Specialized',
+    languages: ['English', 'French'],
+    subject: 'Web Development',
+    category: 'Computer Science',
+    status: 'active'
+  },
+
+  // Additional offers for Mathematics + Algebra combination
+  {
+    title: 'Algebra Problem-Solving Strategies for High School Students',
+    description: 'Develop strong problem-solving skills in algebra through systematic approaches and practice. Focus on equations, inequalities, and function analysis.',
+    author: 'ihor.chernobai.softserveinc@gmail.com',
+    authorRole: 'tutor',
+    price: 30,
+    proficiencyLevel: 'Intermediate',
+    languages: ['English', 'Ukrainian'],
+    subject: 'Algebra',
+    category: 'Mathematics',
+    status: 'active'
+  },
+  {
+    title: 'College Algebra and Pre-Calculus Preparation',
+    description: 'Comprehensive algebra course preparing students for college-level mathematics. Cover polynomial functions, exponential and logarithmic equations, and complex numbers.',
+    author: 'fullstackjs.02.01@gmail.com',
+    authorRole: 'tutor',
+    price: 45,
+    proficiencyLevel: 'Test Preparation',
+    languages: ['English', 'Polish'],
+    subject: 'Algebra',
+    category: 'Mathematics',
+    status: 'active'
+  },
+  {
+    title: 'Abstract Algebra for Advanced Mathematics Students',
+    description: 'Explore groups, rings, and fields in abstract algebra. Perfect for mathematics majors and students interested in theoretical mathematics and cryptography.',
+    author: 'testtutor@email.com',
+    authorRole: 'tutor',
+    price: 80,
+    proficiencyLevel: 'Specialized',
+    languages: ['English', 'Arabic'],
+    subject: 'Algebra',
+    category: 'Mathematics',
+    status: 'active'
+  },
+  {
+    title: 'Algebra Foundations - Build Confidence in Math',
+    description: 'Build a solid foundation in algebraic thinking for middle and high school students. Interactive lessons focusing on understanding core concepts and building confidence.',
+    author: 'emaillubomyr103@gmail.com',
+    authorRole: 'tutor',
+    price: 28,
+    proficiencyLevel: 'Beginner',
+    languages: ['English', 'Spanish', 'Ukrainian'],
+    subject: 'Algebra',
+    category: 'Mathematics',
+    status: 'active'
+  },
+  {
+    title: 'SAT and ACT Algebra Test Prep Intensive Course',
+    description: 'Intensive algebra preparation specifically designed for SAT and ACT exams. Master test-taking strategies and review all key algebra concepts tested.',
+    author: 'ihor.chernobai.softserveinc@gmail.com',
+    authorRole: 'tutor',
+    price: 55,
+    proficiencyLevel: 'Test Preparation',
+    languages: ['English', 'German'],
+    subject: 'Algebra',
+    category: 'Mathematics',
+    status: 'closed'
   }
 ]
 

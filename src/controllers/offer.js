@@ -22,7 +22,7 @@ const getOfferById = async (req, res) => {
 }
 
 const createOffer = async (req, res) => {
-  const { id: authorId, role: authorRole } = {id: '68e3dc32d6a9e60d86fd79c0', role: 'tutor' } //req.user
+  const { id: authorId, role: authorRole } = req.user
   const data = req.body
 
   const newOffer = await offerService.createOffer(authorId, authorRole, data)
