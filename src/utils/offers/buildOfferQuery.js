@@ -1,9 +1,4 @@
-const { Types } = require('mongoose')
-
-const toObjectId = (id) => {
-  if (!id || !Types.ObjectId.isValid(id)) return null
-  return new Types.ObjectId(id)
-}
+const { toObjectId } = require('~/utils')
 
 const buildOfferQuery = ({ search, categoryId, subjectId, languages, priceMin, priceMax, status, skip, limit } = {}) => {
   const escapedTerm = search?.trim()?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')

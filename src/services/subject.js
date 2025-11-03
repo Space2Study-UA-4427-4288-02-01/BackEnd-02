@@ -1,5 +1,7 @@
 const Subject = require('~/models/subject')
 const { PER_PAGE } = require('~/consts/services')
+const buildSubjectsPipeline = require('~/utils/subjects/buildSubjectsPipeline')
+const { toObjectId } = require('../utils')
 
 class SubjectService {
   async getSubjects({ categoryId, search, page } = {}) {
@@ -11,12 +13,9 @@ class SubjectService {
     const skip = (pageNum - 1) * limit
     const totalPages = Math.ceil(total / limit)
 
-    const subjects = await Subject
-      .find(query)
-      .select('name category')
-      .skip(skip)
-      .limit(limit)
-      .sort({ name: 1 })
+    const pipeline = buildSubjectsPipeline({ query, skip, limit })
+
+    const subjects = await Subject.aggregate(pipeline)
 
     return {
       total,
@@ -59,10 +58,11 @@ class SubjectService {
   buildCategoryQuery(categoryId, search = '') {
     const searchTerm = search.trim()
     const escapedTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const categoryObjectId = toObjectId(categoryId)
 
     return {
       ...(searchTerm?.length > 0 ? { name: { $regex: escapedTerm, $options: 'i' } } : {}),
-      ...(categoryId ? { category: categoryId } : {})
+      ...(categoryObjectId ? { category: categoryObjectId } : {})
     }
   }
 }
