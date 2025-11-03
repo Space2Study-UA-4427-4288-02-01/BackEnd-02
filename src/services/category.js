@@ -1,5 +1,6 @@
 const Category = require('~/models/category')
 const { PER_PAGE } = require('~/consts/services')
+const buildCategoryPipeline = require('~/utils/categories/buildCategoryPipeline')
 
 class CategoryService {
   async getCategories({ search, page } = {}) {
@@ -11,12 +12,9 @@ class CategoryService {
     const skip = (pageNum - 1) * limit
     const totalPages = Math.ceil(total / limit)
 
-    const categories = await Category
-      .find(query)
-      .select('name appearance')
-      .skip(skip)
-      .limit(limit)
-      .sort({ name: 1 })
+    const pipeline = buildCategoryPipeline({ query, skip, limit })
+
+    const categories = await Category.aggregate(pipeline)
 
     return {
       total,

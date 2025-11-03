@@ -1,12 +1,16 @@
 const offerService = require('~/services/offer')
-const offerAggregateOptions = require('~/utils/offers/offerAggregateOptions')
 
 const getOffers = async (req, res) => {
-  const pipeline = offerAggregateOptions(req.query, req.params)
+  const { total, perPage, currentPage, totalPages, offers } = await offerService.getOffers(req.query)
 
-  const offers = await offerService.getOffers(pipeline)
-
-  res.status(200).json(offers)
+  res.status(200).json({
+    success: true,
+    total,
+    currentPage,
+    totalPages,
+    perPage,
+    data: offers,
+  })
 }
 
 const getOfferById = async (req, res) => {

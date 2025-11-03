@@ -38,4 +38,39 @@ subjectSchema.virtual('totalOffers').get(function() {
   return { student: 0, tutor: 0 }
 })
 
+subjectSchema.statics.findWithTotalOffers = async function(query = {}) {
+  const subjects = await this.find(query).lean()
+
+  // Get offer counts grouped by subject and role
+  const offerCounts = await Offer.aggregate([
+    {
+      $group: {
+        _id: { subject: '$subject', authorRole: '$authorRole' },
+        count: { $sum: 1 }
+      }
+    }
+  ])
+
+  // Map counts to subjects
+  const subjectsWithOffers = subjects.map(subject => {
+    const studentCount = offerCounts.find(
+      oc => oc._id.subject.toString() === subject._id.toString() && oc._id.authorRole === 'student'
+    )?.count || 0
+
+    const tutorCount = offerCounts.find(
+      oc => oc._id.subject.toString() === subject._id.toString() && oc._id.authorRole === 'tutor'
+    )?.count || 0
+
+    return {
+      ...subject,
+      totalOffers: {
+        student: studentCount,
+        tutor: tutorCount
+      }
+    }
+  })
+
+  return subjectsWithOffers
+}
+
 module.exports = model(SUBJECT, subjectSchema)
