@@ -1,9 +1,9 @@
-const { toObjectId } = require('~/utils')
+const { toObjectId,parseParam } = require('~/utils')
 
 const buildOfferQuery = ({ search, categoryId, subjectId, languages, priceMin, priceMax, status, skip, limit } = {}) => {
   const escapedTerm = search?.trim()?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const langsArray = languages ? JSON.parse(languages) : null
-  const statusArray = status ? JSON.parse(status) : null
+  const langsArray = parseParam(languages)
+  const statusArray = parseParam(status)
 
   const categoryObjectId = toObjectId(categoryId)
   const subjectObjectId = toObjectId(subjectId)
@@ -56,8 +56,8 @@ const buildOfferQuery = ({ search, categoryId, subjectId, languages, priceMin, p
         } : {}),
         ...(categoryObjectId ? { category: categoryObjectId } : {}),
         ...(subjectObjectId ? { subject: subjectObjectId } : {}),
-        ...(langsArray ? { languages: { $in: langsArray } } : {}),
-        ...(statusArray ? { status: { $in: statusArray } } : {}),
+        ...(Array.isArray(langsArray) ? { languages: { $in: langsArray } } : {}),
+        ...(Array.isArray(statusArray) ? { status: { $in: statusArray } } : {}),
         ...(priceMin || priceMax ? {
           price: {
             ...(priceMin ? { $gte: Number(priceMin) } : {}),

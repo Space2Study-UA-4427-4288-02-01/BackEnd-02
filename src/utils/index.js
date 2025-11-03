@@ -5,4 +5,12 @@ const toObjectId = (id) => {
   return new Types.ObjectId(id)
 }
 
-module.exports = { toObjectId }
+const parseParam = (param) => {
+  try {
+    return JSON.parse(param)
+  } catch {
+    return null
+  }
+}
+
+module.exports = { toObjectId, parseParam }
