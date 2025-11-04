@@ -1,9 +1,9 @@
-const { toObjectId,parseParam } = require('~/utils')
+const { toObjectId, parseParam } = require('~/utils')
 
 const buildOfferQuery = ({ search, categoryId, subjectId, languages, priceMin, priceMax, status, skip, limit } = {}) => {
   const escapedTerm = search?.trim()?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const langsArray = parseParam(languages)
-  const statusArray = parseParam(status)
+  const langsArray = Array.isArray(languages) ? languages : parseParam(languages)
+  const statusArray = Array.isArray(status) ? status : parseParam(status)
 
   const categoryObjectId = toObjectId(categoryId)
   const subjectObjectId = toObjectId(subjectId)

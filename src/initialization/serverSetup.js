@@ -7,6 +7,8 @@ const {
   config: { SERVER_PORT }
 } = require('~/configs/config')
 const scheduledCronJobs = require('~/cron-jobs/scheduledCronJobs')
+const setupApolloServer = require('./apollo')
+const setupErrorHandlers = require('./setupErrorHandlers')
 
 process.on('uncaughtException', async (error) => {
   logger.error('Uncaught Exception:', error)
@@ -28,7 +30,11 @@ const serverSetup = async (app) => {
 
   initialization(app)
 
-  return app.listen(SERVER_PORT, () => {
+  const httpServer = await setupApolloServer(app)
+
+  setupErrorHandlers(app)
+
+  return httpServer.listen(SERVER_PORT, () => {
     logger.info(`Server is running on port ${SERVER_PORT}`)
     if (process.env.NODE_ENV !== 'test') {
       scheduledCronJobs()

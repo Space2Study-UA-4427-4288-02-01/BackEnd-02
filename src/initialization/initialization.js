@@ -6,8 +6,6 @@ const {
   config: { CLIENT_URL }
 } = require('~/configs/config')
 const router = require('~/routes')
-const { createNotFoundError } = require('~/utils/errorsHelper')
-const errorMiddleware = require('~/middlewares/error')
 const { setupSwaggerDocs } = require('~/initialization/swagger')
 
 const initialization = (app) => {
@@ -26,12 +24,6 @@ const initialization = (app) => {
   app.use('/', router)
 
   setupSwaggerDocs(app)
-
-  app.use((_req, _res, next) => {
-    next(createNotFoundError())
-  })
-
-  app.use(errorMiddleware)
 }
 
 module.exports = initialization

@@ -7,7 +7,7 @@ const buildOfferQuery = require('~/utils/offers/buildOfferQuery')
 
 const offerService = {
   getOffers: async (params) => {
-    const { page, ...restParams } = params
+    const { page, ...restParams } = params ?? {}
     const limit = PER_PAGE
     const pageNum = Math.max(1, Number.isFinite(Number(page)) ? parseInt(page, 10) : 1)
     const skip = (pageNum - 1) * limit
