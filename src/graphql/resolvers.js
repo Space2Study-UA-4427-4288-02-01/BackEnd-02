@@ -31,7 +31,6 @@ const resolvers = {
 
     subject: async (_, args) => {
       const subject = await subjectService.getSubject(args.id)
-      // console.log({ subject })
       return {
         success: true,
         data: subject,
