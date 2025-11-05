@@ -91,7 +91,8 @@ const buildOfferQuery = ({ search, categoryId, subjectId, languages, priceMin, p
         },
         subject: {
           _id: '$subjectDetails._id',
-          name: '$subjectDetails.name'
+          name: '$subjectDetails.name',
+          category: '$subjectDetails.category'
         },
         category: {
           _id: '$categoryDetails._id',

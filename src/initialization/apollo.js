@@ -15,7 +15,6 @@ const setupApolloServer = async (app) => {
 
   const server = new ApolloServer({
     schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
-    resolvers,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   })
 

@@ -11,6 +11,7 @@ type Query {
   ): OffersResponse!
   subjects(
     page: Int,
+    perPage: Int,
     categoryId: ID,
     search: String
   ): SubjectsResponse!
@@ -20,6 +21,13 @@ type Query {
     search: String
   ): CategoriesResponse!
   category(id: ID!): CategoryResponse!
+}
+
+type Mutation {
+  createSubject(
+    name: String!,
+    categoryId: ID!
+  ): SubjectResponse!
 }
 
 type OffersResponse {
@@ -36,7 +44,7 @@ type SubjectsResponse {
   total: Int!
   currentPage: Int!
   totalPages: Int!
-  perPage: Int!
+  perPage: Int
   data: [Subject]!
 }
 

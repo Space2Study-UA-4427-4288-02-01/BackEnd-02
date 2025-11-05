@@ -58,22 +58,28 @@ const resolvers = {
     }
   },
 
+  Mutation: {
+    createSubject: async (_, args) => {
+      const newSubject = await subjectService.createSubject(args.name, args.categoryId)
+      return {
+        success: true,
+        data: newSubject,
+      }
+    }
+  },
+
   Subject: {
     category: async (parent) => {
-      const subject = await subjectService.getSubject(parent._id)
-      const category = await categoryService.getCategory(subject.category.toString())
-      return {
-        _id: category._id,
-        name: category.name,
-        appearance: category.appearance,
-        category: category
-      }
+      const categoryId = parent.category?.toString()
+      const category = await categoryService.getCategory(categoryId)
+      return category
     }
   },
 
   Offer: {
     author: async (parent) => {
-      const user = await userService.getUserById(parent.author._id.toString())
+      const authorId = parent.author?._id?.toString()
+      const user = await userService.getUserById(authorId)
       return user
     }
   }
