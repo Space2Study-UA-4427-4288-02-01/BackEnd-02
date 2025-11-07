@@ -1,20 +1,18 @@
 const Subject = require('~/models/subject')
-const { PER_PAGE } = require('~/consts/services')
 const buildSubjectsPipeline = require('~/utils/subjects/buildSubjectsPipeline')
 const { toObjectId } = require('../utils')
 
 class SubjectService {
-  async getSubjects({ categoryId, search, page } = {}) {
+  async getSubjects({ categoryId, search, page, perPage } = {}) {
     const query = this.buildCategoryQuery(categoryId, search)
     const total = await Subject.countDocuments(query)
 
-    const limit = PER_PAGE
+    const limit = perPage ? Number(perPage) : null
     const pageNum = Math.max(1, Number.isFinite(Number(page)) ? parseInt(page, 10) : 1)
-    const skip = (pageNum - 1) * limit
-    const totalPages = Math.ceil(total / limit)
+    const skip = (pageNum - 1) * (limit ? limit : 0)
+    const totalPages = Math.ceil(total / (limit ? limit : 1))
 
-    const pipeline = buildSubjectsPipeline({ query, skip, limit })
-
+    const pipeline = buildSubjectsPipeline({ query, skip, limit: limit ? limit : null })
     const subjects = await Subject.aggregate(pipeline)
 
     return {

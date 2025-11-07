@@ -1,10 +1,17 @@
 const buildSubjectsPipeline = ({ query, skip, limit }) => {
   console.log({ query, skip, limit })
+
   const pipeline = [
     { $match: query },
     { $sort: { name: 1 } },
-    { $skip: skip },
-    { $limit: limit },
+    { $skip: skip }
+  ]
+
+  if (limit) {
+    pipeline.push({ $limit: limit })
+  }
+
+  pipeline.push(
     {
       $lookup: {
         from: 'offers',
@@ -82,7 +89,7 @@ const buildSubjectsPipeline = ({ query, skip, limit }) => {
         updatedAt: 1
       }
     }
-  ]
+  )
 
   return pipeline
 }

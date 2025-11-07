@@ -24,8 +24,6 @@ const params = [{ model: Subject, idName: 'id' }]
 router.use(authMiddleware)
 router.param('id', idValidation)
 
-// TODO generate swagger docs for these endpoints
-
 router.get('/', asyncWrapper(getSubjects))
 router.get('/names', asyncWrapper(getSubjectsNames))
 router.get('/:id', isEntityValid({ params }), asyncWrapper(getSubject))
